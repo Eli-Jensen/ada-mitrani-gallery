@@ -5,7 +5,7 @@ import ImageGallery from './components/ImageGallery';
 const Home = () => {
   return (
     <div>
-      <h1>Image Gallery</h1>
+      <h1>Ada Mitrani</h1>
       <ImageGallery />
     </div>
   );
