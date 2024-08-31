@@ -1,10 +1,14 @@
-import R2Images from "./components/R2Images";
+// pages/index.tsx
+import React from 'react';
+import ImageGallery from './components/ImageGallery';
 
-export default function HomePage() {
+const Home = () => {
   return (
     <div>
-      <h1>My R2 Images</h1>
-      {/* <R2Images folder="book-illustrations" /> */}
+      <h1>Image Gallery</h1>
+      <ImageGallery />
     </div>
   );
-}
+};
+
+export default Home;
