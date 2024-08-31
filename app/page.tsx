@@ -1,14 +1,11 @@
-// pages/index.tsx
-import React from 'react';
-import ImageGallery from './components/ImageGallery';
+// app/page.tsx
+import RunningMan from './components/RunningMan';
 
-const Home = () => {
+export default function Home() {
   return (
-    <div>
-      <h1>Ada Mitrani</h1>
-      <ImageGallery />
-    </div>
+    <main>
+      <RunningMan />
+      {/* You can add more content here */}
+    </main>
   );
-};
-
-export default Home;
+}
