@@ -48,10 +48,10 @@ const ImageGallery = () => {
         <Tab label="Drawings" value="drawings" />
         <Tab label="Printmaking" value="printmaking" />
       </Tabs>
-      <ImageList cols={3} gap={8} variant="masonry">
+      <ImageList cols={3} gap={12} variant="masonry">
         {images.length > 0 ? (
           images.map((image, index) => (
-            <ImageListItem key={index}>
+            <ImageListItem key={index} style={{ border: '2px solid #ccc', borderRadius: '5px' }}>
               <img
                 src={`/${image}`} // Path is relative to the public folder
                 alt={`Image ${index}`}
