@@ -1,120 +1,96 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 
 const RunningMan = () => {
-  const [position, setPosition] = useState(100); // Initial position
-  const [targetPosition, setTargetPosition] = useState(100); // Mouse target position
-  const [groundWidth, setGroundWidth] = useState(0); // Ground width initialized to 0
-  const [maxPosition, setMaxPosition] = useState(0); // Max position for the running man initialized to 0
-  const [groundStart, setGroundStart] = useState(0); // Ground starting position initialized to 0
-  const lag = 0.0005; // Lower = more lag, Higher = less lag
-  const deadzone = 50; // Pixels away from the mouse where the man stops
+  const [position, setPosition] = useState(100);
+  const mousePositionRef = useRef(100);
+  const groundWidth = useRef(0);
+  const groundStart = useRef(0);
   const runningManWidth = 200;
   const groundHeight = 50;
-  
-  // Define the gaps
-  const leftGap = 0.25; // 10% from the left of the screen
-  const rightGap = 0.15; // 15% from the right of the screen
+  const leftGap = 0.25;
+  const rightGap = 0.15;
+  const speed = 0.7; // Higher is faster running man
 
   useEffect(() => {
     const updateDimensions = () => {
       const viewportWidth = window.innerWidth;
-      const newGroundStart = viewportWidth * leftGap;
-      const newGroundWidth = viewportWidth * (1 - leftGap - rightGap); // Adjusted for both left and right gaps
-      const newMaxPosition = newGroundWidth - runningManWidth;
-
-      setGroundStart(newGroundStart);
-      setGroundWidth(newGroundWidth);
-      setMaxPosition(newMaxPosition);
+      groundStart.current = viewportWidth * leftGap;
+      groundWidth.current = viewportWidth * (1 - leftGap - rightGap);
+      setPosition(groundStart.current + (groundWidth.current / 2) - (runningManWidth / 2));
     };
 
-    // Initial dimension update
     updateDimensions();
-
-    // Update dimensions on window resize
     window.addEventListener('resize', updateDimensions);
 
-    // Cleanup event listener on unmount
-    return () => {
-      window.removeEventListener('resize', updateDimensions);
-    };
-  }, [runningManWidth, leftGap, rightGap]);
+    return () => window.removeEventListener('resize', updateDimensions);
+  }, [leftGap, rightGap, runningManWidth]);
 
   useEffect(() => {
     const handleMouseMove = (event: MouseEvent) => {
-      const mouseX = event.clientX - groundStart; // Adjust mouse position relative to ground start
-      setTargetPosition(mouseX);
+      mousePositionRef.current = Math.max(groundStart.current, Math.min(event.clientX - (runningManWidth / 2), groundStart.current + groundWidth.current - runningManWidth));
     };
 
     window.addEventListener('mousemove', handleMouseMove);
 
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-    };
-  }, [groundStart]);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
 
   useEffect(() => {
     let animationFrameId: number;
 
     const updatePosition = () => {
-      const imageCenter = position + runningManWidth / 2;
-      const distance = targetPosition - imageCenter;
+      const delta = mousePositionRef.current - position;
+      const direction = delta > 0 ? 1 : -1;
 
-      if (Math.abs(distance) > deadzone) {
-        // Move towards the target position with some lag
-        const step = distance * lag;
-
-        setPosition((prevPosition) => {
-          // Ensure the position is within bounds
-          const newPosition = prevPosition + step;
-          return Math.min(Math.max(newPosition, 0), maxPosition);
+      if (Math.abs(delta) > 1) {
+        setPosition(prevPosition => {
+          const newPosition = prevPosition + direction * Math.min(Math.abs(delta), 10) * speed;
+          return Math.min(Math.max(newPosition, groundStart.current), groundStart.current + groundWidth.current - runningManWidth);
         });
       }
 
       animationFrameId = requestAnimationFrame(updatePosition);
     };
 
-    updatePosition(); // Start the animation loop
+    animationFrameId = requestAnimationFrame(updatePosition);
 
     return () => cancelAnimationFrame(animationFrameId);
-  }, [targetPosition, position, lag, deadzone, maxPosition]);
+  }, [position, speed]);
 
-  // Determine the flip direction based on mouse position
-  const flipDirection = targetPosition > position + runningManWidth / 2 ? 'scaleX(-1)' : 'none';
+  const flipDirection = `scaleX(${mousePositionRef.current < position ? '1' : '-1'})`;
 
   return (
     <div style={{ position: 'relative', height: '100vh', overflow: 'hidden' }}>
-      {/* Ground */}
       <div
         style={{
           position: 'absolute',
           bottom: '0',
-          left: `${groundStart}px`, // Ground starts with left gap
-          width: `${groundWidth}px`, // Ground width adjusted for both gaps
+          left: `${groundStart.current}px`,
+          width: `${groundWidth.current}px`,
           height: `${groundHeight}px`,
-          backgroundColor: '#8B4513', // Brown color for the ground
+          backgroundColor: '#8B4513',
         }}
-      >
-        {/* Optional: Add grass, texture, or other decorations */}
-      </div>
-
-      {/* Running Man */}
-      <motion.img
-        src="/icons/running-man.png"
-        alt="Running Man"
-        style={{
-          position: 'absolute',
-          bottom: `${groundHeight}px`, // Position the man right above the ground
-          left: position + groundStart, // Adjust position based on ground start
-          width: `${runningManWidth}px`,
-          height: 'auto',
-          cursor: 'pointer',
-          transform: flipDirection, // Flip the image based on mouse position
-          transition: 'transform 0.2s ease-in-out', // Smooth transition for flipping
-        }}
-      />
+      ></div>
+      <Link href="/book-illustrations" passHref>
+        <motion.img
+          src="/icons/running-man.png"
+          alt="Running Man"
+          style={{
+            position: 'absolute',
+            bottom: `${groundHeight}px`,
+            left: `${position}px`,
+            width: `${runningManWidth}px`,
+            height: 'auto',
+            cursor: 'pointer',
+            transform: flipDirection,
+            transition: 'transform 0.2s ease-in-out',
+          }}
+        />
+      </Link>
     </div>
   );
 };
