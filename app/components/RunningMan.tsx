@@ -13,7 +13,8 @@ const RunningMan = () => {
   const groundHeight = 50;
   const leftGap = 0.075;
   const rightGap = 0.3;
-  const speed = 0.7; // Higher is faster running man
+  const speed = 0.5; // Higher is faster running man
+  const stopThreshold = runningManWidth/2; // Number of pixels within which the running man stops
 
   useEffect(() => {
     const updateDimensions = () => {
@@ -44,9 +45,9 @@ const RunningMan = () => {
 
     const updatePosition = () => {
       const delta = mousePositionRef.current - position;
-      const direction = delta > 0 ? 1 : -1;
 
-      if (Math.abs(delta) > 1) {
+      if (Math.abs(delta) > stopThreshold) {
+        const direction = delta > 0 ? 1 : -1;
         setPosition(prevPosition => {
           const newPosition = prevPosition + direction * Math.min(Math.abs(delta), 10) * speed;
           return Math.min(Math.max(newPosition, groundStart.current), groundStart.current + groundWidth.current - runningManWidth);
@@ -59,7 +60,7 @@ const RunningMan = () => {
     animationFrameId = requestAnimationFrame(updatePosition);
 
     return () => cancelAnimationFrame(animationFrameId);
-  }, [position, speed]);
+  }, [position, speed, stopThreshold]);
 
   const flipDirection = `scaleX(${mousePositionRef.current < position ? '1' : '-1'})`;
 
