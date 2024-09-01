@@ -14,7 +14,7 @@ const RunningMan = () => {
   const leftGap = 0.075;
   const rightGap = 0.3;
   const speed = 0.5; // Higher is faster running man
-  const stopThreshold = runningManWidth / 2; // Number of pixels within which the running man stops
+  const stopThreshold = runningManWidth / 4; // Number of pixels within which the running man stops
 
   const bucketUrl = process.env.NEXT_PUBLIC_R2_BUCKET_URL; // Use the Cloudflare R2 bucket URL
 
@@ -78,7 +78,12 @@ const RunningMan = () => {
           left: `${groundStart.current}px`,
           width: `${groundWidth.current}px`,
           height: `${groundHeight}px`,
-          backgroundColor: '#8B4513',
+          backgroundImage: `url(${bucketUrl}/icons/rocks.png)`,
+          backgroundSize: 'cover',
+          backgroundRepeat: 'repeat-x',
+          borderRadius: '25px', // Rounded corners
+          maskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)', // Fading edges
+          WebkitMaskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)', // Safari support
         }}
       ></div>
       <Link href="/book-illustrations" passHref>

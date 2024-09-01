@@ -30,7 +30,7 @@
 }
 
 .image-container {
-  flex-basis: calc(20% - 16px); /* Smaller image size */
+  flex-basis: calc(10% - 16px); /* Smaller image size */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
   overflow: hidden;

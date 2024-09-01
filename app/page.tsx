@@ -7,8 +7,8 @@ export default function HomePage() {
 
   return (
     <div style={{ backgroundColor: 'black', height: '100vh' }}>
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', padding: '20px' }}>
-        <Link href="/options">
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', padding: '20px', flexDirection: 'column' }}>
+        <Link href="/categories">
           <div style={{ maxWidth: '30vw', maxHeight: '90vh', width: '100%', height: 'auto' }}>
             <Image
               src={`${bucketUrl}/icons/self-portrait.jpg`} // Use the R2 bucket URL with the /icons prefix
@@ -19,6 +19,17 @@ export default function HomePage() {
               style={{ cursor: 'pointer' }}
             />
           </div>
+        </Link>
+        <Link href="/categories">
+        <div style={{ position: 'relative', marginTop: '20px', textAlign: 'center' }}>
+          <Image
+            src={`${bucketUrl}/icons/name_with_paint.png`} // Updated path to name_with_paint.png
+            alt="Paint Stroke with Name"
+            width={600}
+            height={150}
+            layout="intrinsic"
+          />
+        </div>
         </Link>
       </div>
     </div>
