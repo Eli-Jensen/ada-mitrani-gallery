@@ -9,10 +9,10 @@ const RunningMan = () => {
   const mousePositionRef = useRef(100);
   const groundWidth = useRef(0);
   const groundStart = useRef(0);
-  const runningManWidth = 200;
+  const runningManWidth = 400;
   const groundHeight = 50;
-  const leftGap = 0.25;
-  const rightGap = 0.15;
+  const leftGap = 0.075;
+  const rightGap = 0.3;
   const speed = 0.7; // Higher is faster running man
 
   useEffect(() => {

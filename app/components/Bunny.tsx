@@ -27,7 +27,7 @@ const Bunny = () => {
           position: 'absolute',
           bottom: '20px',
           left: '20px',
-          width: '100px',
+          width: '150px',
           height: 'auto',
           cursor: 'pointer',
           // Apply the CSS directly to the img element.
