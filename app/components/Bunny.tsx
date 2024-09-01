@@ -2,12 +2,16 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import Link from 'next/link'; // Import Link from Next.js
+import Link from 'next/link';
 
 const Bunny = () => {
   const [isJumping, setIsJumping] = useState(false);
-  
+
+  // Use the environment variable for the Cloudflare R2 bucket URL
+  const bucketUrl = process.env.NEXT_PUBLIC_R2_BUCKET_URL;
+
   useEffect(() => {
+    console.log('Bucket URL:', bucketUrl); // Add this line for debugging
     const interval = setInterval(() => {
       setIsJumping(true);
       setTimeout(() => {
@@ -16,12 +20,12 @@ const Bunny = () => {
     }, 3000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [bucketUrl]);
 
   return (
     <Link href="/app/black-and-white-drawings/page" passHref>
       <motion.img
-        src="/icons/bunny.png"
+        src={`${bucketUrl}/icons/bunny.png`}
         alt="Bunny"
         style={{
           position: 'absolute',
@@ -30,15 +34,14 @@ const Bunny = () => {
           width: '150px',
           height: 'auto',
           cursor: 'pointer',
-          // Apply the CSS directly to the img element.
         }}
         animate={{
-          y: isJumping ? -50 : 0
+          y: isJumping ? -50 : 0,
         }}
         transition={{
           type: 'spring',
           stiffness: 200,
-          damping: 10
+          damping: 10,
         }}
       />
     </Link>

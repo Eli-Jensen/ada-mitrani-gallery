@@ -14,9 +14,20 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Use the environment variable for the Cloudflare R2 bucket URL
+  const bucketUrl = process.env.NEXT_PUBLIC_R2_BUCKET_URL;
+
   return (
     <html lang="en">
-      <body className={`${inter.className} bg-paper`}>
+      <body
+        className={`${inter.className}`}
+        style={{
+          backgroundImage: `url('${bucketUrl}/navigation/textured_paper.jpg')`,
+          backgroundSize: 'cover',
+          backgroundRepeat: 'no-repeat',
+          backgroundPosition: 'center',
+        }}
+      >
         {children}
       </body>
     </html>

@@ -14,14 +14,16 @@ const RunningMan = () => {
   const leftGap = 0.075;
   const rightGap = 0.3;
   const speed = 0.5; // Higher is faster running man
-  const stopThreshold = runningManWidth/2; // Number of pixels within which the running man stops
+  const stopThreshold = runningManWidth / 2; // Number of pixels within which the running man stops
+
+  const bucketUrl = process.env.NEXT_PUBLIC_R2_BUCKET_URL; // Use the Cloudflare R2 bucket URL
 
   useEffect(() => {
     const updateDimensions = () => {
       const viewportWidth = window.innerWidth;
       groundStart.current = viewportWidth * leftGap;
       groundWidth.current = viewportWidth * (1 - leftGap - rightGap);
-      setPosition(groundStart.current + (groundWidth.current / 2) - (runningManWidth / 2));
+      setPosition(groundStart.current + groundWidth.current / 2 - runningManWidth / 2);
     };
 
     updateDimensions();
@@ -32,7 +34,10 @@ const RunningMan = () => {
 
   useEffect(() => {
     const handleMouseMove = (event: MouseEvent) => {
-      mousePositionRef.current = Math.max(groundStart.current, Math.min(event.clientX - (runningManWidth / 2), groundStart.current + groundWidth.current - runningManWidth));
+      mousePositionRef.current = Math.max(
+        groundStart.current,
+        Math.min(event.clientX - runningManWidth / 2, groundStart.current + groundWidth.current - runningManWidth)
+      );
     };
 
     window.addEventListener('mousemove', handleMouseMove);
@@ -48,7 +53,7 @@ const RunningMan = () => {
 
       if (Math.abs(delta) > stopThreshold) {
         const direction = delta > 0 ? 1 : -1;
-        setPosition(prevPosition => {
+        setPosition((prevPosition) => {
           const newPosition = prevPosition + direction * Math.min(Math.abs(delta), 10) * speed;
           return Math.min(Math.max(newPosition, groundStart.current), groundStart.current + groundWidth.current - runningManWidth);
         });
@@ -78,7 +83,7 @@ const RunningMan = () => {
       ></div>
       <Link href="/book-illustrations" passHref>
         <motion.img
-          src="/icons/running-man.png"
+          src={`${bucketUrl}/icons/running-man.png`} // Use the R2 bucket URL for the image source
           alt="Running Man"
           style={{
             position: 'absolute',
