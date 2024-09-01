@@ -1,9 +1,9 @@
 import { fetchImagesFromR2 } from '../actions/fetchImages';
-import BookIllustrationsClient from './BookIllustrationsClient';
+import GalleryClient from '../components/GalleryClient';
 
-export default async function BookIllustrationsPage() {
+export default async function ChildrenBookIllustrationsPage() {
   const folderName = 'children-book-illustrations/';
   const imageKeys = await fetchImagesFromR2(folderName);
 
-  return <BookIllustrationsClient initialImageKeys={imageKeys} />;
+  return <GalleryClient initialImageKeys={imageKeys} title="Children Book Illustrations" />;
 }
