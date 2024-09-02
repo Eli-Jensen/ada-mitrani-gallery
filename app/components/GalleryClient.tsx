@@ -16,14 +16,14 @@ interface GalleryClientProps {
 export default function GalleryClient({ initialImageKeys, title }: GalleryClientProps) {
   const [imageKeys, setImageKeys] = useState<string[]>(initialImageKeys);
   const [imageDimensions, setImageDimensions] = useState<{ [key: string]: { width: number; height: number } }>({});
-  const [loading, setLoading] = useState(true); // Step 1: Add loading state
+  const [loading, setLoading] = useState(true);
 
   const initializePhotoSwipe = useCallback(() => {
     const lightbox = new PhotoSwipeLightbox({
       gallery: '#gallery',
       children: 'a',
       pswpModule: () => import('photoswipe'),
-      padding: { top: 20, bottom: 20, left: 20, right: 20 }, // Optional padding
+      padding: { top: 20, bottom: 20, left: 20, right: 20 },
     });
     lightbox.init();
 
@@ -41,7 +41,7 @@ export default function GalleryClient({ initialImageKeys, title }: GalleryClient
         dimensions[key] = { width, height };
       }
       setImageDimensions(dimensions);
-      setLoading(false); // Step 2: Set loading to false once images are fetched
+      setLoading(false);
     };
 
     fetchImageDimensions();
@@ -62,12 +62,21 @@ export default function GalleryClient({ initialImageKeys, title }: GalleryClient
         <h1 style={{ textAlign: 'center', flex: '1', fontSize: '2rem' }}>{title}</h1>
         <div style={{ width: '120px' }}></div> {/* Spacer for centering the title */}
       </div>
-      {loading ? ( // Step 3: Display loading spinner or message
-        <div style={{ textAlign: 'center', padding: '50px' }}>
+      {loading ? (
+        <div style={{ textAlign: 'center', padding: '100px' }}>
           <div className="spinner"></div> {/* Spinner or "Loading..." text */}
         </div>
       ) : (
-        <div className="image-gallery" id="gallery">
+        <div
+          className="image-gallery"
+          id="gallery"
+          style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            justifyContent: 'center', // Center the images horizontally
+            gap: '10px', // Add some space between the images
+          }}
+        >
           {imageKeys.map((key) => {
             const dimensions = imageDimensions[key];
             if (!dimensions) return null; // Skip rendering until dimensions are loaded
@@ -79,6 +88,12 @@ export default function GalleryClient({ initialImageKeys, title }: GalleryClient
                 data-pswp-height={dimensions.height}
                 key={key}
                 className="image-container"
+                style={{
+                  display: 'block',
+                  border: 'none',
+                  margin: 0,
+                  padding: 0,
+                }} // Ensure no borders, margins, or padding
               >
                 <Image
                   src={`${process.env.NEXT_PUBLIC_R2_BUCKET_URL}/${key}`}
@@ -86,6 +101,12 @@ export default function GalleryClient({ initialImageKeys, title }: GalleryClient
                   width={150}
                   height={150}
                   className="image"
+                  style={{
+                    border: 'none',
+                    margin: 0,
+                    padding: 0,
+                    display: 'block',
+                  }} // Remove borders from the image
                 />
               </a>
             );
