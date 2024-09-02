@@ -4,13 +4,19 @@ const nextConfig = {
       remotePatterns: [
         {
           protocol: 'https',
-          hostname: process.env.NEXT_PUBLIC_R2_DEV_HOSTNAME, // Dev bucket hostname from env
+          hostname: "media.adamitrani.com",
           port: '', 
           pathname: '/**', 
         },
         {
           protocol: 'https',
-          hostname: process.env.NEXT_PUBLIC_R2_PROD_HOSTNAME, // Production bucket hostname from env
+          hostname: process.env.NEXT_PUBLIC_R2_DEV_HOSTNAME,
+          port: '', 
+          pathname: '/**', 
+        },
+        {
+          protocol: 'https',
+          hostname: process.env.NEXT_PUBLIC_R2_PROD_HOSTNAME,
           port: '', 
           pathname: '/**', 
         },
