@@ -112,7 +112,7 @@ const RunningMan = () => {
           left: `${groundStart.current}px`,
           width: `${groundWidth.current}px`,
           height: `${groundHeight}px`,
-          backgroundImage: `url(${bucketUrl}/icons/rocks.png)`,
+          backgroundImage: `url(${bucketUrl}/icons/rocks.webp)`,
           backgroundSize: 'cover',
           backgroundRepeat: 'repeat-x',
           borderRadius: '25px', // Rounded corners
@@ -123,7 +123,7 @@ const RunningMan = () => {
       <Link href="/children-book-illustrations" passHref>
         <motion.img
           ref={runningManRef} // Attach the ref to the image
-          src={`${bucketUrl}/icons/running-man.png`} // Use the R2 bucket URL for the image source
+          src={`${bucketUrl}/icons/running-man.webp`} // Use the R2 bucket URL for the image source
           alt="Running Man"
           style={{
             position: 'absolute',

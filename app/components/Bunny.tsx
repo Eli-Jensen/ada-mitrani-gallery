@@ -25,7 +25,7 @@ const Bunny = () => {
   return (
     <Link href="/app/black-and-white-drawings/page" passHref>
       <motion.img
-        src={`${bucketUrl}/icons/bunny.png`}
+        src={`${bucketUrl}/icons/bunny.webp`}
         alt="Bunny"
         style={{
           position: 'absolute',

@@ -11,11 +11,10 @@ export default function HomePage() {
         <Link href="/categories">
           <div style={{ maxWidth: '30vw', maxHeight: '90vh', width: '100%', height: 'auto' }}>
             <Image
-              src={`${bucketUrl}/icons/self-portrait.jpg`} // Use the R2 bucket URL with the /icons prefix
+              src={`${bucketUrl}/icons/self-portrait.webp`} // Use the R2 bucket URL with the /icons prefix
               alt="Self Portrait"
               width={5433}
               height={6496}
-              layout="responsive"
               style={{ cursor: 'pointer' }}
             />
           </div>
@@ -23,11 +22,10 @@ export default function HomePage() {
         <Link href="/categories">
         <div style={{ position: 'relative', marginTop: '20px', textAlign: 'center' }}>
           <Image
-            src={`${bucketUrl}/icons/name_with_paint.png`} // Updated path to name_with_paint.png
+            src={`${bucketUrl}/icons/name_with_paint.webp`} // Updated path to name_with_paint.png
             alt="Paint Stroke with Name"
             width={600}
             height={150}
-            layout="intrinsic"
           />
         </div>
         </Link>
