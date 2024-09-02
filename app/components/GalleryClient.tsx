@@ -64,7 +64,7 @@ export default function GalleryClient({ initialImageKeys, title }: GalleryClient
       </div>
       {loading ? (
         <div style={{ textAlign: 'center', padding: '100px' }}>
-          <div className="spinner"></div> {/* Spinner or "Loading..." text */}
+          <div className="spinner"></div> {/* Loading spinner */}
         </div>
       ) : (
         <div
@@ -93,7 +93,7 @@ export default function GalleryClient({ initialImageKeys, title }: GalleryClient
                   border: 'none',
                   margin: 0,
                   padding: 0,
-                }} // Ensure no borders, margins, or padding
+                }}
               >
                 <Image
                   src={`${process.env.NEXT_PUBLIC_R2_BUCKET_URL}/${key}`}
@@ -106,7 +106,7 @@ export default function GalleryClient({ initialImageKeys, title }: GalleryClient
                     margin: 0,
                     padding: 0,
                     display: 'block',
-                  }} // Remove borders from the image
+                  }}
                 />
               </a>
             );

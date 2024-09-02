@@ -11,7 +11,6 @@ const Bunny = () => {
   const bucketUrl = process.env.NEXT_PUBLIC_R2_BUCKET_URL;
 
   useEffect(() => {
-    console.log('Bucket URL:', bucketUrl); // Add this line for debugging
     const interval = setInterval(() => {
       setIsJumping(true);
       setTimeout(() => {
