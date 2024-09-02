@@ -54,7 +54,7 @@ export default function GalleryClient({ initialImageKeys, title }: GalleryClient
   }, [imageDimensions, imageKeys, initializePhotoSwipe]);
 
   return (
-    <div>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '20px' }}>
         <Link href="/categories">
           <BackToCategoriesButton />
@@ -63,7 +63,7 @@ export default function GalleryClient({ initialImageKeys, title }: GalleryClient
         <div style={{ width: '120px' }}></div> {/* Spacer for centering the title */}
       </div>
       {loading ? (
-        <div style={{ textAlign: 'center', padding: '100px' }}>
+        <div style={{ flex: '1', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <div className="spinner"></div> {/* Loading spinner */}
         </div>
       ) : (
@@ -75,6 +75,7 @@ export default function GalleryClient({ initialImageKeys, title }: GalleryClient
             flexWrap: 'wrap',
             justifyContent: 'center', // Center the images horizontally
             gap: '10px', // Add some space between the images
+            flex: '1', // Make sure the gallery takes up remaining space
           }}
         >
           {imageKeys.map((key) => {
