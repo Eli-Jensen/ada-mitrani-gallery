@@ -11,6 +11,7 @@ import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
 
 interface GalleryClientProps {
   initialImageKeys: string[];
@@ -27,12 +28,15 @@ export default function GalleryClient({ initialImageKeys, title }: GalleryClient
   const isMediumScreen = useMediaQuery(theme.breakpoints.between('sm', 'lg'));
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
 
+  // Adjusting the font size based on screen size
+  const fontSize = isSmallScreen ? '1.5rem' : isMediumScreen ? '2rem' : '2.5rem';
+
   const initializePhotoSwipe = useCallback(() => {
     const lightbox = new PhotoSwipeLightbox({
       gallery: '#gallery',
       children: 'a',
       pswpModule: () => import('photoswipe'),
-      padding: { top: 20, bottom: 20, left: 20, right: 20 },
+      padding: { top: 0, bottom: 20, left: 20, right: 20 },
     });
     lightbox.init();
 
@@ -71,12 +75,14 @@ export default function GalleryClient({ initialImageKeys, title }: GalleryClient
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '20px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem 2rem' }}>
         <Link href="/categories">
           <BackToCategoriesButton />
         </Link>
-        <h1 style={{ textAlign: 'center', flex: '1', fontSize: '2rem' }}>{title}</h1>
-        <div style={{ width: '120px' }}></div> {/* Spacer for centering the title */}
+        <Typography variant="h1" style={{ textAlign: 'center', flex: '1', fontSize: fontSize, margin: '0' }}>
+          {title}
+        </Typography>
+        <div style={{ width: '7.5rem' }}></div> {/* Spacer for centering the title */}
       </div>
       {loading ? (
         <div style={{ flex: '1', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -86,8 +92,8 @@ export default function GalleryClient({ initialImageKeys, title }: GalleryClient
         <ImageList
           id="gallery"
           cols={cols} // Dynamic columns based on screen size
-          gap={10} // Add space between images
-          style={{ flex: '1', padding: '100px' }}
+          gap={10} // Use a direct number for the gap property
+          style={{ flex: '1', padding: theme.spacing(6) }} // Reduced padding around the gallery
         >
           {imageKeys.map((key) => {
             const dimensions = imageDimensions[key];
@@ -108,7 +114,7 @@ export default function GalleryClient({ initialImageKeys, title }: GalleryClient
                     style={{
                       width: '100%', // Make the image responsive
                       height: 'auto', // Maintain aspect ratio
-                      borderRadius: '8px', // Optional: Add rounded corners
+                      borderRadius: theme.shape.borderRadius, // Optional: Add rounded corners
                     }}
                   />
                 </a>
