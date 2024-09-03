@@ -6,34 +6,36 @@ import Link from 'next/link';
 
 const RunningMan = () => {
   const [position, setPosition] = useState(100);
-  const [runningManHeight, setRunningManHeight] = useState<number | null>(null); // Initial value is null
+  const [runningManWidth, setRunningManWidth] = useState(400);
+  const [runningManHeight, setRunningManHeight] = useState<number | null>(null);
   const mousePositionRef = useRef(100);
-  const runningManRef = useRef<HTMLImageElement | null>(null); // Type the ref for an HTMLImageElement
+  const runningManRef = useRef<HTMLImageElement | null>(null);
   const groundWidth = useRef(0);
   const groundStart = useRef(0);
-  const runningManWidth = 400;
   const groundHeight = 50;
-  const textHeightOffset = 10; // Adjust this value to control the distance between the text and the running man
   const leftGap = 0.075;
   const rightGap = 0.3;
-  const speed = 0.5; // Higher is faster running man
-  const stopThreshold = runningManWidth / 4; // Number of pixels within which the running man stops
+  const speed = 0.5;
+  const stopThreshold = runningManWidth / 4;
 
-  const bucketUrl = process.env.NEXT_PUBLIC_R2_BUCKET_URL; // Use the Cloudflare R2 bucket URL
+  const bucketUrl = process.env.NEXT_PUBLIC_R2_BUCKET_URL;
 
   useLayoutEffect(() => {
     const updateDimensions = () => {
       const viewportWidth = window.innerWidth;
+      const newRunningManWidth = Math.max(100, viewportWidth * 0.15); // Responsive width between 100px and 15% of viewport width
+      setRunningManWidth(newRunningManWidth);
+
       groundStart.current = viewportWidth * leftGap;
       groundWidth.current = viewportWidth * (1 - leftGap - rightGap);
-      setPosition(groundStart.current + groundWidth.current / 2 - runningManWidth / 2);
+      setPosition(groundStart.current + groundWidth.current / 2 - newRunningManWidth / 2);
     };
 
     updateDimensions();
     window.addEventListener('resize', updateDimensions);
 
     return () => window.removeEventListener('resize', updateDimensions);
-  }, [leftGap, rightGap, runningManWidth]);
+  }, [leftGap, rightGap]);
 
   useLayoutEffect(() => {
     const handleMouseMove = (event: MouseEvent) => {
@@ -46,7 +48,7 @@ const RunningMan = () => {
     window.addEventListener('mousemove', handleMouseMove);
 
     return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
+  }, [runningManWidth]);
 
   useLayoutEffect(() => {
     let animationFrameId: number;
@@ -71,7 +73,6 @@ const RunningMan = () => {
   }, [position, speed, stopThreshold]);
 
   useLayoutEffect(() => {
-    // Measure the height of the running man image after it loads
     if (runningManRef.current) {
       const updateHeight = () => setRunningManHeight(runningManRef.current!.clientHeight);
       if (runningManRef.current.complete) {
@@ -80,7 +81,7 @@ const RunningMan = () => {
         runningManRef.current.onload = updateHeight;
       }
     }
-  }, [runningManRef.current]); // Runs when the image ref is set
+  }, [runningManRef.current]);
 
   const flipDirection = `scaleX(${mousePositionRef.current < position ? '1' : '-1'})`;
 
@@ -91,14 +92,15 @@ const RunningMan = () => {
           <motion.div
             style={{
               position: 'absolute',
-              bottom: `${groundHeight + runningManHeight + textHeightOffset}px`, // Positioning above the running man
-              left: `${position + runningManWidth/2.25}px`,
+              bottom: `${groundHeight + runningManHeight}px`, // Position the text directly on top of the running man
+              left: `${position + runningManWidth / 2.25}px`,
               width: 'max-content',
-              transform: 'translateX(-50%)', // Center the text horizontally above the running man
+              transform: 'translateX(-50%)',
               cursor: 'pointer',
-              color: 'black', // Adjust text color as needed
-              textDecoration: 'underline', // Makes it clear that the text is a link
-              textAlign: 'center', // Ensure the text is centered
+              color: 'black',
+              textDecoration: 'underline',
+              textAlign: 'center',
+              fontSize: `${runningManWidth * 0.1}px`, // Font size based on runningManWidth
             }}
           >
             <span style={{ display: 'block' }}>Children Book Illustrations</span>
@@ -115,15 +117,15 @@ const RunningMan = () => {
           backgroundImage: `url(${bucketUrl}/icons/rocks.webp)`,
           backgroundSize: 'cover',
           backgroundRepeat: 'repeat-x',
-          borderRadius: '25px', // Rounded corners
-          maskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)', // Fading edges
-          WebkitMaskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)', // Safari support
+          borderRadius: '25px',
+          maskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)',
+          WebkitMaskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)',
         }}
       ></div>
       <Link href="/children-book-illustrations" passHref>
         <motion.img
-          ref={runningManRef} // Attach the ref to the image
-          src={`${bucketUrl}/icons/running-man.webp`} // Use the R2 bucket URL for the image source
+          ref={runningManRef}
+          src={`${bucketUrl}/icons/running-man.webp`}
           alt="Running Man"
           style={{
             position: 'absolute',
