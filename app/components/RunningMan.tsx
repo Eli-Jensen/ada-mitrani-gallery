@@ -1,8 +1,10 @@
 'use client';
 
 import { useLayoutEffect, useState, useRef } from 'react';
-import { motion } from 'framer-motion';
+import { motion, MotionStyle } from 'framer-motion';
 import Link from 'next/link';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
 
 const RunningMan = () => {
   const [position, setPosition] = useState(100);
@@ -13,12 +15,24 @@ const RunningMan = () => {
   const groundWidth = useRef(0);
   const groundStart = useRef(0);
   const groundHeight = 50;
-  const leftGap = 0.075;
-  const rightGap = 0.3;
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+
+  const leftGap = isSmallScreen ? 0.025 : 0.025;
+  const rightGap = isSmallScreen ? 0.3 : 0.2;
   const speed = 0.5;
   const stopThreshold = runningManWidth / 4;
 
   const bucketUrl = process.env.NEXT_PUBLIC_R2_BUCKET_URL;
+
+  const fontSize = isSmallScreen ? '0.8rem' : '1rem'; // Shared font size
+  const labelStyle: MotionStyle = {
+    fontSize: fontSize,
+    color: 'black',
+    textAlign: 'center' as MotionStyle['textAlign'], // Ensure compatibility with MotionStyle
+    textDecoration: 'underline',
+    cursor: 'pointer',
+  };
 
   useLayoutEffect(() => {
     const updateDimensions = () => {
@@ -86,27 +100,24 @@ const RunningMan = () => {
   const flipDirection = `scaleX(${mousePositionRef.current < position ? '1' : '-1'})`;
 
   return (
-    <div style={{ position: 'relative', height: '100vh', overflow: 'hidden' }}>
+    <div style={{ position: 'relative', height: '100vh', overflow: 'hidden', zIndex: 5 }}>
       <Link href="/children-book-illustrations" passHref>
         {runningManHeight !== null && (
           <motion.div
             style={{
+              ...labelStyle, // Shared style for consistent font and underline
               position: 'absolute',
-              bottom: `${groundHeight + runningManHeight}px`, // Position the text directly on top of the running man
+              bottom: `${groundHeight + runningManHeight}px`,
               left: `${position + runningManWidth / 2.25}px`,
-              width: 'max-content',
               transform: 'translateX(-50%)',
-              cursor: 'pointer',
-              color: 'black',
-              textDecoration: 'underline',
-              textAlign: 'center',
-              fontSize: `${runningManWidth * 0.1}px`, // Font size based on runningManWidth
             }}
           >
-            <span style={{ display: 'block' }}>Children Book Illustrations</span>
+            Children Book Illustrations
           </motion.div>
         )}
       </Link>
+
+      {/* Ground */}
       <div
         style={{
           position: 'absolute',
@@ -122,6 +133,8 @@ const RunningMan = () => {
           WebkitMaskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)',
         }}
       ></div>
+
+      {/* RunningMan Image */}
       <Link href="/children-book-illustrations" passHref>
         <motion.img
           ref={runningManRef}
