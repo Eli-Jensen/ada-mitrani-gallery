@@ -81,7 +81,7 @@ const Bunny = () => {
             }}
             onLoad={handleImageLoad} // Set height after image is loaded
             animate={{
-              y: isLoaded ? [-10, 0] : 0, // Slight bounce effect after loading
+              y: isLoaded ? [-10, 0] : 0, // Slight bounce effect after loading,
             }}
             transition={{
               duration: 0.5,

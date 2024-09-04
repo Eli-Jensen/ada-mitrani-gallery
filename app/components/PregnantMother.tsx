@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -8,6 +8,8 @@ import { useTheme } from '@mui/material/styles';
 
 const PregnantMother = () => {
   const bucketUrl = process.env.NEXT_PUBLIC_R2_BUCKET_URL;
+
+  const [imageLoaded, setImageLoaded] = useState(false); // State to track if the image is loaded
 
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
@@ -36,6 +38,7 @@ const PregnantMother = () => {
           style={{
             cursor: 'pointer',
             marginBottom: '10px', // Space between the text and the image
+            visibility: imageLoaded ? 'visible' : 'visible', // Text is always visible
           }}
         >
           {/* Text above the image */}
@@ -71,6 +74,7 @@ const PregnantMother = () => {
             repeat: Infinity, // Repeat infinitely
             repeatType: 'mirror', // Mirror the rotation back and forth
           }}
+          onLoad={() => setImageLoaded(true)} // Set imageLoaded to true when the image finishes loading
         />
       </Link>
     </motion.div>
