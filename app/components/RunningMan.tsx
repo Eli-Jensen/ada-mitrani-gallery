@@ -116,8 +116,9 @@ const RunningMan = () => {
               ...labelStyle, 
               position: 'absolute',
               bottom: `${groundHeight + runningManHeight + 10}px`,
-              left: `${position + runningManWidth / 2}px`,  // Centering above the Running Man
-              transform: 'translateX(-50%)',  // Fine-tune centering
+              left: `${position + runningManWidth / 3}px`,  // Centering above the Running Man
+              transform: 'translateX(0%)',  // Fine-tune centering
+              transformOrigin: 'center', // Ensure scaling happens from the center
             }}
             whileHover={{ scale: 1.1 }} 
             transition={{ duration: 0.2 }} 

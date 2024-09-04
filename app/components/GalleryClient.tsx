@@ -89,7 +89,7 @@ export default function GalleryClient({ initialImageKeys, title }: GalleryClient
           <div className="spinner"></div> {/* Loading spinner */}
         </div>
       ) : (
-        <ImageList
+        <ImageList variant="masonry"
           id="gallery"
           cols={cols} // Dynamic columns based on screen size
           gap={10} // Use a direct number for the gap property
