@@ -1,15 +1,12 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 
 const PregnantMother = () => {
-  const [isShaking, setIsShaking] = useState(false);
-
-  // Use the environment variable for the Cloudflare R2 bucket URL
   const bucketUrl = process.env.NEXT_PUBLIC_R2_BUCKET_URL;
 
   const theme = useTheme();
@@ -17,45 +14,62 @@ const PregnantMother = () => {
   const isMediumScreen = useMediaQuery(theme.breakpoints.between('sm', 'md'));
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('md'));
 
-  // Adjust image size based on screen size, making it larger than before
-  const imageWidth = isSmallScreen ? 150 : isMediumScreen ? 200 : 300;
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setIsShaking(true);
-      setTimeout(() => {
-        setIsShaking(false);
-      }, 1000);
-    }, 1500);
-
-    return () => clearInterval(interval);
-  }, []);
+  // Adjust image size and positioning based on screen size
+  const imageWidth = isSmallScreen ? 100 : isMediumScreen ? 150 : 250;
+  const fontSize = isSmallScreen ? '1rem' : isMediumScreen ? '1.25rem' : '1.5rem';
+  const topPosition = isSmallScreen ? '100px' : isMediumScreen ? '120px' : '150px';
+  const rightPosition = isSmallScreen ? '50px' : isMediumScreen ? '100px' : '200px';
 
   return (
     <motion.div
       style={{
         position: 'absolute',
-        top: '150px', // Move it closer to the middle of the page
-        right: '200px', // Keep it in the top right, but closer to the center
+        top: topPosition,
+        right: rightPosition,
         zIndex: 10,
-        transform: 'rotate(-20deg)', // Rotate degrees counter-clockwise
+        textAlign: 'center',
       }}
     >
-      <Link href="/ink-drawings" passHref>
+      {/* Link to /ink-drawings */}
+      <Link href="/ink-drawings">
+        <motion.div
+          style={{
+            cursor: 'pointer',
+            marginBottom: '10px', // Space between the text and the image
+          }}
+        >
+          {/* Text above the image */}
+          <motion.div
+            style={{
+              fontSize: fontSize,
+              color: 'black',
+              textDecoration: 'underline',
+            }}
+            whileHover={{ scale: 1.05 }} // Small hover effect for the text
+          >
+            Ink Drawings
+          </motion.div>
+        </motion.div>
+      </Link>
+
+      {/* Pregnant Mother Image */}
+      <Link href="/ink-drawings">
         <motion.img
           src={`${bucketUrl}/icons/pregnant_mother_of_three_white.webp`}
           alt="PregnantMotherOfThree"
           style={{
-            width: `${imageWidth}px`, // Adjust the width based on screen size
+            width: `${imageWidth}px`,
             height: 'auto',
             cursor: 'pointer',
           }}
           animate={{
-            x: isShaking ? [-10, 10, -10, 10, 0] : 0, // Shaking horizontally
-            rotate: isShaking ? [-5, 5, -5, 5, 0] : 0, // Rotating slightly
+            rotate: [-10, 10], // Rotate between -10deg and 10deg
           }}
           transition={{
-            duration: 0.5, // Duration of the shaking and rotating effect
+            duration: 2, // Duration of one full back and forth cycle
+            ease: 'easeInOut', // Smooth easing for continuous motion
+            repeat: Infinity, // Repeat infinitely
+            repeatType: 'mirror', // Mirror the rotation back and forth
           }}
         />
       </Link>

@@ -10,6 +10,7 @@ const RunningMan = () => {
   const [position, setPosition] = useState(100);
   const [runningManWidth, setRunningManWidth] = useState(400);
   const [runningManHeight, setRunningManHeight] = useState<number | null>(null);
+  const [isLoaded, setIsLoaded] = useState(false); // Track when the image is loaded
   const mousePositionRef = useRef(100);
   const runningManRef = useRef<HTMLImageElement | null>(null);
   const groundWidth = useRef(0);
@@ -25,19 +26,22 @@ const RunningMan = () => {
 
   const bucketUrl = process.env.NEXT_PUBLIC_R2_BUCKET_URL;
 
-  const fontSize = isSmallScreen ? '0.8rem' : '1rem'; // Shared font size
+  const fontSize = isSmallScreen ? '1rem' : '1.25rem'; // Shared font size
   const labelStyle: MotionStyle = {
     fontSize: fontSize,
     color: 'black',
-    textAlign: 'center' as MotionStyle['textAlign'], // Ensure compatibility with MotionStyle
+    textAlign: 'center' as MotionStyle['textAlign'], // Explicitly cast textAlign
     textDecoration: 'underline',
     cursor: 'pointer',
+    whiteSpace: isSmallScreen ? 'normal' : 'nowrap', // Allow wrapping on small screens
+    width: isSmallScreen ? '100px' : 'auto', // Adjust width for text wrapping
+    lineHeight: isSmallScreen ? '1.2rem' : 'normal', // Increase line height for small screens
   };
 
   useLayoutEffect(() => {
     const updateDimensions = () => {
       const viewportWidth = window.innerWidth;
-      const newRunningManWidth = Math.max(100, viewportWidth * 0.15); // Responsive width between 100px and 15% of viewport width
+      const newRunningManWidth = Math.max(100, viewportWidth * 0.15);
       setRunningManWidth(newRunningManWidth);
 
       groundStart.current = viewportWidth * leftGap;
@@ -88,7 +92,10 @@ const RunningMan = () => {
 
   useLayoutEffect(() => {
     if (runningManRef.current) {
-      const updateHeight = () => setRunningManHeight(runningManRef.current!.clientHeight);
+      const updateHeight = () => {
+        setRunningManHeight(runningManRef.current!.clientHeight);
+        setIsLoaded(true); // Mark image as loaded
+      };
       if (runningManRef.current.complete) {
         updateHeight();
       } else {
@@ -101,18 +108,21 @@ const RunningMan = () => {
 
   return (
     <div style={{ position: 'relative', height: '100vh', overflow: 'hidden', zIndex: 5 }}>
-      <Link href="/children-book-illustrations" passHref>
-        {runningManHeight !== null && (
+      <Link href="/children-book-illustrations">
+        {/* Render the text only after the image is loaded */}
+        {isLoaded && runningManHeight !== null && (
           <motion.div
             style={{
-              ...labelStyle, // Shared style for consistent font and underline
+              ...labelStyle, 
               position: 'absolute',
-              bottom: `${groundHeight + runningManHeight}px`,
-              left: `${position + runningManWidth / 2.25}px`,
-              transform: 'translateX(-50%)',
+              bottom: `${groundHeight + runningManHeight + 10}px`,
+              left: `${position + runningManWidth / 2}px`,  // Centering above the Running Man
+              transform: 'translateX(-50%)',  // Fine-tune centering
             }}
+            whileHover={{ scale: 1.1 }} 
+            transition={{ duration: 0.2 }} 
           >
-            Children Book Illustrations
+            Children <br /> Book <br /> Illustrations
           </motion.div>
         )}
       </Link>
@@ -135,7 +145,7 @@ const RunningMan = () => {
       ></div>
 
       {/* RunningMan Image */}
-      <Link href="/children-book-illustrations" passHref>
+      <Link href="/children-book-illustrations">
         <motion.img
           ref={runningManRef}
           src={`${bucketUrl}/icons/running-man.webp`}

@@ -1,15 +1,15 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { motion, MotionStyle } from 'framer-motion';
+import { motion } from 'framer-motion';
 import Link from 'next/link';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 
 const Bunny = () => {
-  const [isJumping, setIsJumping] = useState(false);
   const [bunnyHeight, setBunnyHeight] = useState<number | null>(null);
   const bunnyRef = useRef<HTMLImageElement | null>(null);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   // Use the environment variable for the Cloudflare R2 bucket URL
   const bucketUrl = process.env.NEXT_PUBLIC_R2_BUCKET_URL;
@@ -20,77 +20,56 @@ const Bunny = () => {
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('md'));
 
   // Adjust Bunny width based on screen size
-  let bunnyWidth;
-  if (isSmallScreen) {
-    bunnyWidth = 100; // Small size for small screens
-  } else if (isMediumScreen) {
-    bunnyWidth = 150; // Medium size for medium screens
-  } else if (isLargeScreen) {
-    bunnyWidth = 250; // Large size for large screens
-  }
+  const bunnyWidth = isSmallScreen ? 100 : isMediumScreen ? 150 : 250;
+  const fontSize = isSmallScreen ? '1rem' : isMediumScreen ? '1.25rem' : '1.5rem'; // Font size for the label
 
-  const fontSize = isSmallScreen ? '0.8rem' : '1rem'; // Font size for the label
-
-  const labelStyle: MotionStyle = {
-    fontSize: fontSize,
-    color: 'black',
-    textAlign: 'center' as MotionStyle['textAlign'],
-    textDecoration: 'underline',
-    cursor: 'pointer',
-  };
-
-  // Calculate the Bunny's height dynamically once it's loaded
+  // Set the bunny height after the image has loaded
   useEffect(() => {
-    if (bunnyRef.current) {
+    if (bunnyRef.current && bunnyRef.current.complete) {
       setBunnyHeight(bunnyRef.current.clientHeight);
+      setIsLoaded(true); // Image has loaded
     }
   }, [bunnyWidth]);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setIsJumping(true);
-      setTimeout(() => {
-        setIsJumping(false);
-      }, 500);
-    }, 3000);
-
-    return () => clearInterval(interval);
-  }, []);
+  const handleImageLoad = () => {
+    if (bunnyRef.current) {
+      setBunnyHeight(bunnyRef.current.clientHeight);
+      setIsLoaded(true); // Image is fully loaded
+    }
+  };
 
   return (
-    <div style={{ position: 'absolute', bottom: '20px', right: '20px', zIndex: 10 }}>
+    <motion.div
+      style={{
+        position: 'absolute',
+        bottom: '20px',
+        right: '20px',
+        zIndex: 10,
+        textAlign: 'center', // Center the text above the image
+      }}
+    >
       <Link href="/bio-contact">
         <motion.div
           style={{
-            position: 'relative',
             cursor: 'pointer',
-            textAlign: 'center',
           }}
         >
-          {/* Bio/Contact text placed dynamically above the Bunny */}
-          {bunnyHeight !== null && (
+          {/* Text above Bunny's head */}
+          {isLoaded && bunnyHeight !== null && (
             <motion.div
               style={{
-                ...labelStyle,
-                position: 'absolute',
-                bottom: `${bunnyHeight + 10}px`,
-                left: '35%',
-                transform: 'translateX(-50%)', // Center the text above the Bunny's head
+                fontSize: fontSize,
+                color: 'black',
+                textDecoration: 'underline',
+                marginBottom: '10px', // Add space between text and bunny
               }}
-              animate={{
-                y: isJumping ? -50 : 0,
-              }}
-              transition={{
-                type: 'spring',
-                stiffness: 200,
-                damping: 10,
-              }}
+              whileHover={{ scale: 1.05 }} // Add a slight hover effect
             >
               Bio/Contact
             </motion.div>
           )}
 
-          {/* Bunny image */}
+          {/* Bunny Image */}
           <motion.img
             ref={bunnyRef}
             src={`${bucketUrl}/icons/bunny.webp`}
@@ -98,19 +77,22 @@ const Bunny = () => {
             style={{
               width: `${bunnyWidth}px`,
               height: 'auto',
+              cursor: 'pointer',
             }}
+            onLoad={handleImageLoad} // Set height after image is loaded
             animate={{
-              y: isJumping ? -50 : 0,
+              y: isLoaded ? [-10, 0] : 0, // Slight bounce effect after loading
             }}
             transition={{
-              type: 'spring',
-              stiffness: 200,
-              damping: 10,
+              duration: 0.5,
+              ease: 'easeInOut',
+              repeat: Infinity,
+              repeatType: 'reverse', // Bounce animation
             }}
           />
         </motion.div>
       </Link>
-    </div>
+    </motion.div>
   );
 };
 

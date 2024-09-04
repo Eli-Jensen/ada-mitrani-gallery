@@ -95,7 +95,7 @@ export default function GalleryClient({ initialImageKeys, title }: GalleryClient
           gap={10} // Use a direct number for the gap property
           style={{ flex: '1', padding: theme.spacing(6) }} // Reduced padding around the gallery
         >
-          {imageKeys.map((key) => {
+          {imageKeys.map((key, index) => {
             const dimensions = imageDimensions[key];
             if (!dimensions) return null; // Skip rendering until dimensions are loaded
 
@@ -111,6 +111,7 @@ export default function GalleryClient({ initialImageKeys, title }: GalleryClient
                     alt={key}
                     width={dimensions.width}
                     height={dimensions.height}
+                    loading={index === 0 ? 'eager' : 'lazy'} // Lazy load all images except the first one
                     style={{
                       width: '100%', // Make the image responsive
                       height: 'auto', // Maintain aspect ratio
