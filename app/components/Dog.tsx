@@ -51,6 +51,7 @@ const Dog = () => {
         </motion.div>
       </Link>
 
+      {/* Dog Image */}
       <Link href="/drawings">
         <motion.img
           src={`${bucketUrl}/icons/dog_II.webp`}
@@ -59,17 +60,19 @@ const Dog = () => {
             width: `${imageWidth}px`,
             height: 'auto',
             cursor: 'pointer',
-            }}
-            animate={{
-            rotate: [-10, 10], // Rotate between -10deg and 10deg
-            }}
-            transition={{
-            duration: 2, // Duration of one full back and forth cycle
-            ease: 'easeInOut', // Smooth easing for continuous motion
+          }}
+          animate={{
+            x: [0, -20, 0], // Move slightly to the left
+            y: [0, -10, 0], // Move slightly up
+            rotate: [0, -5, 0], // Small head tilt for barking effect
+          }}
+          transition={{
+            duration: 1.5, // Total time for one bark motion
+            ease: 'easeInOut',
             repeat: Infinity, // Repeat infinitely
-            repeatType: 'mirror', // Mirror the rotation back and forth
-            }}
-            onLoad={() => setImageLoaded(true)} // Set imageLoaded to true when the image finishes loading
+            repeatDelay: 2, // Delay before repeating the motion
+          }}
+          onLoad={() => setImageLoaded(true)}
         />
       </Link>
     </motion.div>
