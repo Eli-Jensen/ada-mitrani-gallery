@@ -17,17 +17,12 @@ const Dog = () => {
 
   const imageWidth = isSmallScreen ? 100 : isMediumScreen ? 150 : 250;
   const fontSize = isSmallScreen ? '1rem' : isMediumScreen ? '1.25rem' : '1.5rem';
-  const topPosition = isSmallScreen ? '100px' : isMediumScreen ? '120px' : '150px';
-  const leftPosition = isSmallScreen ? '50px' : isMediumScreen ? '100px' : '150px'; // Positioned to the left
 
   return (
     <motion.div
       style={{
-        position: 'absolute',
-        top: topPosition,
-        left: leftPosition,
-        zIndex: 10,
         textAlign: 'center',
+        width: 'fit-content',
       }}
     >
       <Link href="/drawings">
@@ -35,7 +30,7 @@ const Dog = () => {
           style={{
             cursor: 'pointer',
             marginBottom: '10px',
-            visibility: imageLoaded ? 'visible' : 'visible',
+            visibility: imageLoaded ? 'visible' : 'hidden',
           }}
         >
           <motion.div
@@ -62,15 +57,15 @@ const Dog = () => {
             cursor: 'pointer',
           }}
           animate={{
-            x: [0, -20, 0], // Move slightly to the left
-            y: [0, -10, 0], // Move slightly up
-            rotate: [0, -5, 0], // Small head tilt for barking effect
+            x: [0, -20, 0],
+            y: [0, -10, 0],
+            rotate: [0, -5, 0],
           }}
           transition={{
-            duration: 1.5, // Total time for one bark motion
+            duration: 1.5,
             ease: 'easeInOut',
-            repeat: Infinity, // Repeat infinitely
-            repeatDelay: 2, // Delay before repeating the motion
+            repeat: Infinity,
+            repeatDelay: 2,
           }}
           onLoad={() => setImageLoaded(true)}
         />

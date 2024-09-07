@@ -1,7 +1,11 @@
+'use client';
+
+import React from 'react';
 import RunningMan from '../components/RunningMan';
 import Bunny from '../components/Bunny';
-import PregnantMother from '../components/PregnantMother'; 
-import Dog from '../components/Dog'; // Import the Dog component
+import PregnantMother from '../components/PregnantMother';
+import Dog from '../components/Dog';
+import Angel from '../components/Angel';
 
 export default function Categories() {
   return (
@@ -9,19 +13,41 @@ export default function Categories() {
       <div
         style={{
           display: 'flex',
-          justifyContent: 'space-evenly', // Evenly space the items
-          position: 'absolute',
-          top: '0', // Positioned at the top of the screen
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
           width: '100%',
-          zIndex: 10, // Ensure this row is above other content
+          zIndex: 10,
+          gap: '20px', // Space between rows/icons
         }}
       >
-        <Dog /> {/* Dog positioned in the row */}
-        <PregnantMother /> {/* PregnantMother positioned in the row */}
-      </div>
+        {/* Row of clickable icons */}
+        <div
+          style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            justifyContent: 'space-evenly',
+            width: '100%',
+          }}
+        >
+          <Dog />
+          <Angel />
+          <PregnantMother />
+          <Bunny />
+          {/* Add two more clickable icons here */}
+        </div>
 
-      <Bunny /> {/* Bunny keeps its absolute position */}
-      <RunningMan /> {/* RunningMan keeps its absolute position */}
+        {/* RunningMan spans the full width of the viewport */}
+        <div
+          style={{
+            width: '100%', // Make RunningMan span full width
+            position: 'relative', // Allows the rocks to sit at the bottom
+            height: '50vh', // Adjust height based on your design
+          }}
+        >
+          <RunningMan />
+        </div>
+      </div>
     </main>
   );
 }

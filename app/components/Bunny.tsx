@@ -11,65 +11,47 @@ const Bunny = () => {
   const bunnyRef = useRef<HTMLImageElement | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
 
-  // Use the environment variable for the Cloudflare R2 bucket URL
   const bucketUrl = process.env.NEXT_PUBLIC_R2_BUCKET_URL;
 
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const isMediumScreen = useMediaQuery(theme.breakpoints.between('sm', 'md'));
-  const isLargeScreen = useMediaQuery(theme.breakpoints.up('md'));
 
-  // Adjust Bunny width based on screen size
   const bunnyWidth = isSmallScreen ? 100 : isMediumScreen ? 150 : 250;
-  const fontSize = isSmallScreen ? '1rem' : isMediumScreen ? '1.25rem' : '1.5rem'; // Font size for the label
+  const fontSize = isSmallScreen ? '1rem' : isMediumScreen ? '1.25rem' : '1.5rem';
 
-  // Set the bunny height after the image has loaded
   useEffect(() => {
     if (bunnyRef.current && bunnyRef.current.complete) {
       setBunnyHeight(bunnyRef.current.clientHeight);
-      setIsLoaded(true); // Image has loaded
+      setIsLoaded(true);
     }
   }, [bunnyWidth]);
 
   const handleImageLoad = () => {
     if (bunnyRef.current) {
       setBunnyHeight(bunnyRef.current.clientHeight);
-      setIsLoaded(true); // Image is fully loaded
+      setIsLoaded(true);
     }
   };
 
   return (
-    <motion.div
-      style={{
-        position: 'absolute',
-        bottom: '20px',
-        right: '20px',
-        zIndex: 10,
-        textAlign: 'center', // Center the text above the image
-      }}
-    >
+    <motion.div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', zIndex: 10 }}>
       <Link href="/bio-contact">
-        <motion.div
-          style={{
-            cursor: 'pointer',
-          }}
-        >
-          {/* Text above Bunny's head */}
+        <motion.div style={{ cursor: 'pointer' }}>
           {isLoaded && bunnyHeight !== null && (
             <motion.div
               style={{
                 fontSize: fontSize,
                 color: 'black',
                 textDecoration: 'underline',
-                marginBottom: '10px', // Add space between text and bunny
+                marginBottom: '10px',
               }}
-              whileHover={{ scale: 1.05 }} // Add a slight hover effect
+              whileHover={{ scale: 1.05 }}
             >
               Bio/Contact
             </motion.div>
           )}
 
-          {/* Bunny Image */}
           <motion.img
             ref={bunnyRef}
             src={`${bucketUrl}/icons/bunny.webp`}
@@ -79,15 +61,15 @@ const Bunny = () => {
               height: 'auto',
               cursor: 'pointer',
             }}
-            onLoad={handleImageLoad} // Set height after image is loaded
+            onLoad={handleImageLoad}
             animate={{
-              y: isLoaded ? [-10, 0] : 0, // Slight bounce effect after loading,
+              y: isLoaded ? [-10, 0] : 0,
             }}
             transition={{
               duration: 0.5,
               ease: 'easeInOut',
               repeat: Infinity,
-              repeatType: 'reverse', // Bounce animation
+              repeatType: 'reverse',
             }}
           />
         </motion.div>
