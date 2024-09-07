@@ -15,7 +15,7 @@ const Dog = () => {
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const isMediumScreen = useMediaQuery(theme.breakpoints.between('sm', 'md'));
 
-  const imageWidth = isSmallScreen ? 100 : isMediumScreen ? 150 : 250;
+  const imageWidth = isSmallScreen ? 100 : isMediumScreen ? 250 : 450;
   const fontSize = isSmallScreen ? '1rem' : isMediumScreen ? '1.25rem' : '1.5rem';
 
   return (
@@ -30,7 +30,7 @@ const Dog = () => {
           style={{
             cursor: 'pointer',
             marginBottom: '10px',
-            visibility: imageLoaded ? 'visible' : 'hidden',
+            visibility: imageLoaded ? 'visible' : 'visible',
           }}
         >
           <motion.div
@@ -46,7 +46,7 @@ const Dog = () => {
         </motion.div>
       </Link>
 
-      {/* Dog Image */}
+      {/* Dog Image with Clockwise Bark Rotation from Hind Legs */}
       <Link href="/drawings">
         <motion.img
           src={`${bucketUrl}/icons/dog_II.webp`}
@@ -55,17 +55,19 @@ const Dog = () => {
             width: `${imageWidth}px`,
             height: 'auto',
             cursor: 'pointer',
+            transformOrigin: 'bottom right', // Rotate around hind legs (bottom-right corner)
           }}
           animate={{
-            x: [0, -20, 0],
-            y: [0, -10, 0],
-            rotate: [0, -5, 0],
+            rotate: [0, 10, 0, 10, 0], // Clockwise rotation
+            x: [0, -25, 0, -25, 0], // Aggressive forward motion
+            y: [0, -15, 0, -15, 0], // Up and down movement
           }}
           transition={{
-            duration: 1.5,
+            duration: 1.2,
             ease: 'easeInOut',
+            times: [0, 0.2, 0.4, 0.6, 1],
             repeat: Infinity,
-            repeatDelay: 2,
+            repeatDelay: 2, // Pause between bark cycles
           }}
           onLoad={() => setImageLoaded(true)}
         />

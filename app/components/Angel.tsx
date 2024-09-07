@@ -15,10 +15,8 @@ const Angel = () => {
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const isMediumScreen = useMediaQuery(theme.breakpoints.between('sm', 'md'));
 
-  const imageWidth = isSmallScreen ? 100 : isMediumScreen ? 150 : 250;
+  const imageWidth = isSmallScreen ? 100 : isMediumScreen ? 250 : 450;
   const fontSize = isSmallScreen ? '1rem' : isMediumScreen ? '1.25rem' : '1.5rem';
-  const topPosition = isSmallScreen ? '100px' : isMediumScreen ? '120px' : '150px';
-  const leftPosition = isSmallScreen ? '50px' : isMediumScreen ? '100px' : '150px'; // Positioned to the left
 
   return (
     <motion.div
@@ -48,7 +46,7 @@ const Angel = () => {
         </motion.div>
       </Link>
 
-      {/* Angel Image */}
+      {/* Angel Image with Floating Animation */}
       <Link href="/drawings">
         <motion.img
           src={`${bucketUrl}/icons/angel.webp`}
@@ -59,15 +57,13 @@ const Angel = () => {
             cursor: 'pointer',
           }}
           animate={{
-            x: [0, -20, 0], // Move slightly to the left
-            y: [0, -10, 0], // Move slightly up
-            rotate: [0, -5, 0], // Small head tilt for barking effect
+            y: [0, -15, 0], // Smooth floating effect
+            opacity: [1, 0.9, 1], // Slight fade to enhance the floating effect
           }}
           transition={{
-            duration: 1.5, // Total time for one bark motion
+            duration: 4, // Longer duration for a gentle float
             ease: 'easeInOut',
-            repeat: Infinity, // Repeat infinitely
-            repeatDelay: 2, // Delay before repeating the motion
+            repeat: Infinity, // Infinite floating
           }}
           onLoad={() => setImageLoaded(true)}
         />
