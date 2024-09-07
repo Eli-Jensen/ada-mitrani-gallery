@@ -6,6 +6,7 @@ import Bunny from '../components/Bunny';
 import PregnantMother from '../components/PregnantMother';
 import Dog from '../components/Dog';
 import Angel from '../components/Angel';
+import BookCover from '../components/BookCover';
 
 export default function Categories() {
   return (
@@ -33,6 +34,7 @@ export default function Categories() {
           <Dog />
           <Angel />
           <PregnantMother />
+          <BookCover />
           <Bunny />
         </div>
       </div>

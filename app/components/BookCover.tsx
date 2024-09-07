@@ -6,7 +6,7 @@ import Link from 'next/link';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 
-const Angel = () => {
+const BookCover = () => {
   const bucketUrl = process.env.NEXT_PUBLIC_R2_BUCKET_URL;
 
   const [imageLoaded, setImageLoaded] = useState(false);
@@ -15,7 +15,7 @@ const Angel = () => {
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const isMediumScreen = useMediaQuery(theme.breakpoints.between('sm', 'md'));
 
-  const imageWidth = isSmallScreen ? 100 : isMediumScreen ? 250 : 450;
+  const imageWidth = isSmallScreen ? 100 : isMediumScreen ? 150 : 250;
   const fontSize = isSmallScreen ? '1rem' : isMediumScreen ? '1.25rem' : '1.5rem';
 
   return (
@@ -25,7 +25,7 @@ const Angel = () => {
         width: 'fit-content',
       }}
     >
-      <Link href="/prints">
+      <Link href="/book-covers">
         <motion.div
           style={{
             cursor: 'pointer',
@@ -39,31 +39,32 @@ const Angel = () => {
               color: 'black',
               textDecoration: 'underline',
             }}
-            whileHover={{ scale: 1.05 }}
           >
-            Prints
+            Book Covers
           </motion.div>
         </motion.div>
       </Link>
 
-      {/* Angel Image with Floating Animation */}
-      <Link href="/prints">
+      {/* Book Cover Image with Parallax Effect */}
+      <Link href="/book-covers">
         <motion.img
-          src={`${bucketUrl}/icons/angel.webp`}
-          alt="angel"
+          src={`${bucketUrl}/icons/Cover_EN.webp`}
+          alt="Book Cover"
           style={{
             width: `${imageWidth}px`,
             height: 'auto',
             cursor: 'pointer',
           }}
           animate={{
-            y: [0, -15, 0], // Smooth floating effect
-            opacity: [1, 0.9, 1], // Slight fade to enhance the floating effect
+            x: [-5, 5, -5], // Horizontal parallax motion
+            y: [-3, 3, -3], // Vertical parallax motion
+            rotateY: [-3, 3, -3], // Small 3D tilt for a parallax effect
           }}
           transition={{
-            duration: 4, // Longer duration for a gentle float
+            duration: 6, // Slow alternating effect
             ease: 'easeInOut',
-            repeat: Infinity, // Infinite floating
+            repeat: Infinity, // Repeat forever
+            repeatType: 'mirror', // Alternate back and forth
           }}
           onLoad={() => setImageLoaded(true)}
         />
@@ -72,4 +73,4 @@ const Angel = () => {
   );
 };
 
-export default Angel;
+export default BookCover;
