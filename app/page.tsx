@@ -7,11 +7,8 @@ export default function HomePage() {
   const bucketUrl = process.env.NEXT_PUBLIC_R2_BUCKET_URL;
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', padding: '20px', flexDirection: 'column', fontSize: '3rem'}}>Work in progress</div>
-  );
-    // <div style={{ backgroundColor: 'black', height: '100vh' }}>
-      
-      {/* <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', padding: '20px', flexDirection: 'column' }}>
+    <div style={{ backgroundColor: 'black', height: '100vh' }}>
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', padding: '20px', flexDirection: 'column' }}>
         <Link href="/categories">
           <div className="portrait-container">
             <div className="image-wrapper">
@@ -33,7 +30,7 @@ export default function HomePage() {
             </div>
           </div>
         </Link>
-      </div> */}
+      </div> 
 
       <style jsx>{`
         .portrait-container {
@@ -68,6 +65,6 @@ export default function HomePage() {
           }
         }
       `}</style>
-    // </div>
-  // );
+     </div>
+  );
 }
