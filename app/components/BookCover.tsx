@@ -35,10 +35,11 @@ const BookCover = () => {
         >
           <motion.div
             style={{
-              fontSize: fontSize,
+              fontSize: fontSize, // Responsive font size
               color: 'black',
               textDecoration: 'underline',
             }}
+            whileHover={{ scale: 1.05 }}
           >
             Book<br />Covers
           </motion.div>

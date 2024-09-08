@@ -31,7 +31,7 @@ const Bunny = () => {
           style={{
             cursor: 'pointer',
             marginBottom: '10px',
-            visibility: imageLoaded ? 'visible' : 'hidden',
+            visibility: imageLoaded ? 'visible' : 'visible',
           }}
         >
           <motion.div

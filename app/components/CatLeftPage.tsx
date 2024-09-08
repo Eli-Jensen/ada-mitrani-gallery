@@ -36,10 +36,11 @@ const CatLeftPage = () => {
         >
           <motion.div
             style={{
-              fontSize: fontSize, // Responsive font size using em
+              fontSize: fontSize, // Responsive font size
               color: 'black',
               textDecoration: 'underline',
             }}
+            whileHover={{ scale: 1.05 }}
           >
             Poetry<br />Illustrations
           </motion.div>

@@ -8,10 +8,10 @@ import { useTheme } from '@mui/material/styles';
 
 const RunningMan = () => {
   const [position, setPosition] = useState(100);
-  const [runningManWidth, setRunningManWidth] = useState(400);
+  const [runningManWidth, setRunningManWidth] = useState(15); // Use vw as base width
   const [runningManHeight, setRunningManHeight] = useState<number | null>(null);
-  const [isTouchDevice, setIsTouchDevice] = useState(false); // Detect if touch device
-  const [isMovingRight, setIsMovingRight] = useState(true); // Track movement direction
+  const [isTouchDevice, setIsTouchDevice] = useState(false); 
+  const [isMovingRight, setIsMovingRight] = useState(true); 
   const [isLoaded, setIsLoaded] = useState(false);
   const mousePositionRef = useRef(100);
   const runningManRef = useRef<HTMLImageElement | null>(null);
@@ -20,10 +20,11 @@ const RunningMan = () => {
   const groundHeight = 50;
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMediumScreen = useMediaQuery(theme.breakpoints.between('sm', 'md'));
 
   const bucketUrl = process.env.NEXT_PUBLIC_R2_BUCKET_URL;
 
-  const fontSize = isSmallScreen ? '1rem' : '1.25rem'; // Shared font size
+  const fontSize = isSmallScreen ? '1rem' : '1.25rem'; 
   const labelStyle: MotionStyle = {
     fontSize: fontSize,
     color: 'black',
@@ -35,7 +36,6 @@ const RunningMan = () => {
     lineHeight: isSmallScreen ? '1.2rem' : 'normal',
   };
 
-  // Check if the user is on a touch device
   useLayoutEffect(() => {
     const checkTouchDevice = () => {
       setIsTouchDevice('ontouchstart' in window || navigator.maxTouchPoints > 0);
@@ -43,31 +43,29 @@ const RunningMan = () => {
     checkTouchDevice();
   }, []);
 
-  // Update dimensions on window resize
   useLayoutEffect(() => {
     const updateDimensions = () => {
       const viewportWidth = window.innerWidth;
-      const newRunningManWidth = Math.max(100, viewportWidth * 0.15);
+      const newRunningManWidth = isSmallScreen ? 50 : isMediumScreen ? 30 : 15;
       setRunningManWidth(newRunningManWidth);
 
       groundStart.current = 0;
       groundWidth.current = viewportWidth;
-      setPosition(groundWidth.current / 2 - newRunningManWidth / 2); // Initial position centered
+      setPosition(groundWidth.current / 2 - (viewportWidth * newRunningManWidth) / 100 / 2); // Initial position centered
     };
 
     updateDimensions();
     window.addEventListener('resize', updateDimensions);
 
     return () => window.removeEventListener('resize', updateDimensions);
-  }, []);
+  }, [isSmallScreen]);
 
-  // Handle mouse movement on non-touch devices
   useLayoutEffect(() => {
     if (!isTouchDevice) {
       const handleMouseMove = (event: MouseEvent) => {
         const newMouseX = Math.max(
           groundStart.current,
-          Math.min(event.clientX - runningManWidth / 2, groundStart.current + groundWidth.current - runningManWidth)
+          Math.min(event.clientX - (window.innerWidth * runningManWidth) / 100 / 2, groundStart.current + groundWidth.current - (window.innerWidth * runningManWidth) / 100)
         );
         mousePositionRef.current = newMouseX;
       };
@@ -78,30 +76,23 @@ const RunningMan = () => {
     }
   }, [runningManWidth, isTouchDevice]);
 
-  // Animate RunningMan's movement
   useLayoutEffect(() => {
     let animationFrameId: number;
 
     const updatePosition = () => {
       if (isTouchDevice) {
-        // Automatic back-and-forth running for touch devices
         const speed = 0.5;
         setPosition((prevPosition) => {
           const newPosition = prevPosition + (isMovingRight ? speed : -speed);
-
-          // If RunningMan reaches the right edge, reverse direction
-          if (newPosition > groundWidth.current - runningManWidth) {
+          if (newPosition > groundWidth.current - (window.innerWidth * runningManWidth) / 100) {
             setIsMovingRight(false);
           }
-          // If RunningMan reaches the left edge, reverse direction
           if (newPosition < 0) {
             setIsMovingRight(true);
           }
-
           return newPosition;
         });
       } else {
-        // Follow mouse pointer for non-touch devices
         const delta = mousePositionRef.current - position;
         const speed = 0.02;
         if (Math.abs(delta) > 1) {
@@ -117,7 +108,6 @@ const RunningMan = () => {
     return () => cancelAnimationFrame(animationFrameId);
   }, [position, isTouchDevice, isMovingRight]);
 
-  // Update height when image is loaded
   useLayoutEffect(() => {
     if (runningManRef.current) {
       const updateHeight = () => {
@@ -134,21 +124,20 @@ const RunningMan = () => {
 
   const flipDirection = isTouchDevice
     ? isMovingRight
-      ? 'scaleX(-1)' // Move right: normal direction
-      : 'scaleX(1)' // Move left: flipped horizontally
+      ? 'scaleX(-1)'
+      : 'scaleX(1)'
     : `scaleX(${mousePositionRef.current < position ? '1' : '-1'})`;
 
   return (
     <div style={{ width: '100%', height: '100%', position: 'relative', overflow: 'hidden', zIndex: 5 }}>
       <Link href="/children-book-illustrations">
-        {/* Render the text only after the image is loaded */}
         {isLoaded && runningManHeight !== null && (
           <motion.div
             style={{
               ...labelStyle,
               position: 'absolute',
-              bottom: `${groundHeight + runningManHeight + 20}px`, // Keep it above RunningMan's head
-              left: `${position + runningManWidth / 2.25}px`, // Dynamic position above RunningMan
+              bottom: `${groundHeight + runningManHeight + 20}px`,
+              left: `${position + (window.innerWidth * runningManWidth) / 100 / 2.25}px`,
               transform: 'translateX(0%)',
             }}
             whileHover={{ scale: 1.1 }}
@@ -159,7 +148,6 @@ const RunningMan = () => {
         )}
       </Link>
 
-      {/* RunningMan Image */}
       <Link href="/children-book-illustrations">
         <motion.img
           ref={runningManRef}
@@ -167,18 +155,17 @@ const RunningMan = () => {
           alt="Running Man"
           style={{
             position: 'absolute',
-            bottom: `${groundHeight}px`, // Above the ground
-            left: `${position}px`, // Dynamic position
-            width: `${runningManWidth}px`,
+            bottom: `${groundHeight}px`,
+            left: `${position}px`,
+            width: `${runningManWidth}vw`,
             height: 'auto',
             cursor: 'pointer',
-            transform: flipDirection, // Flip horizontally based on direction
+            transform: flipDirection,
             transition: 'transform 0.2s ease-in-out',
           }}
         />
       </Link>
 
-      {/* Ground */}
       <div
         style={{
           position: 'absolute',
