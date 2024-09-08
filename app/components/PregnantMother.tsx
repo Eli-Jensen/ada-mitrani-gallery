@@ -16,10 +16,8 @@ const PregnantMother = () => {
   const isMediumScreen = useMediaQuery(theme.breakpoints.between('sm', 'md'));
 
   // Adjust image size and positioning based on screen size
-  const imageWidth = isSmallScreen ? 100 : isMediumScreen ? 150 : 250;
+  const imageWidth = isSmallScreen ? '20vw' : isMediumScreen ? '15vw' : '10vw';
   const fontSize = isSmallScreen ? '1rem' : isMediumScreen ? '1.25rem' : '1.5rem';
-  const topPosition = isSmallScreen ? '100px' : isMediumScreen ? '120px' : '150px';
-  const rightPosition = isSmallScreen ? '50px' : isMediumScreen ? '100px' : '200px';
 
   return (
     <motion.div
@@ -46,7 +44,7 @@ const PregnantMother = () => {
             }}
             whileHover={{ scale: 1.05 }} // Small hover effect for the text
           >
-            Ink Drawings
+            Ink<br />Drawings
           </motion.div>
         </motion.div>
       </Link>
@@ -57,7 +55,7 @@ const PregnantMother = () => {
           src={`${bucketUrl}/icons/pregnant_mother_of_three_white.webp`}
           alt="PregnantMotherOfThree"
           style={{
-            width: `${imageWidth}px`,
+            width: imageWidth,
             height: 'auto',
             cursor: 'pointer',
           }}

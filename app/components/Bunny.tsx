@@ -1,78 +1,73 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 
 const Bunny = () => {
-  const [bunnyHeight, setBunnyHeight] = useState<number | null>(null);
-  const bunnyRef = useRef<HTMLImageElement | null>(null);
-  const [isLoaded, setIsLoaded] = useState(false);
-
   const bucketUrl = process.env.NEXT_PUBLIC_R2_BUCKET_URL;
+
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const isMediumScreen = useMediaQuery(theme.breakpoints.between('sm', 'md'));
 
-  const bunnyWidth = isSmallScreen ? 100 : isMediumScreen ? 150 : 250;
-  const fontSize = isSmallScreen ? '1rem' : isMediumScreen ? '1.25rem' : '1.5rem';
-
-  useEffect(() => {
-    if (bunnyRef.current && bunnyRef.current.complete) {
-      setBunnyHeight(bunnyRef.current.clientHeight);
-      setIsLoaded(true);
-    }
-  }, [bunnyWidth]);
-
-  const handleImageLoad = () => {
-    if (bunnyRef.current) {
-      setBunnyHeight(bunnyRef.current.clientHeight);
-      setIsLoaded(true);
-    }
-  };
+  // Responsive image width
+  const imageWidth = isSmallScreen ? '20vw' : isMediumScreen ? '15vw' : '10vw';
+  const fontSize = isSmallScreen ? '1em' : isMediumScreen ? '1.25em' : '1.5em';
 
   return (
-    <motion.div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', zIndex: 10 }}>
+    <motion.div
+      style={{
+        textAlign: 'center',
+        width: 'fit-content',
+      }}
+    >
       <Link href="/bio-contact">
-        <motion.div style={{ cursor: 'pointer' }}>
-          {isLoaded && bunnyHeight !== null && (
-            <motion.div
-              style={{
-                fontSize: fontSize,
-                color: 'black',
-                textDecoration: 'underline',
-                marginBottom: '10px',
-              }}
-              whileHover={{ scale: 1.05 }}
-            >
-              Bio/Contact
-            </motion.div>
-          )}
-
-          <motion.img
-            ref={bunnyRef}
-            src={`${bucketUrl}/icons/bunny.webp`}
-            alt="Bunny"
+        <motion.div
+          style={{
+            cursor: 'pointer',
+            marginBottom: '10px',
+            visibility: imageLoaded ? 'visible' : 'hidden',
+          }}
+        >
+          <motion.div
             style={{
-              width: `${bunnyWidth}px`,
-              height: 'auto',
-              cursor: 'pointer',
+              fontSize: fontSize, // Responsive font size
+              color: 'black',
+              textDecoration: 'underline',
             }}
-            onLoad={handleImageLoad}
-            animate={{
-              y: isLoaded ? [-10, 0] : 0,
-            }}
-            transition={{
-              duration: 0.5,
-              ease: 'easeInOut',
-              repeat: Infinity,
-              repeatType: 'reverse',
-            }}
-          />
+            whileHover={{ scale: 1.05 }}
+          >
+            Bio/Contact
+          </motion.div>
         </motion.div>
+      </Link>
+
+      {/* Bunny Image with Bounce Animation */}
+      <Link href="/bio-contact">
+        <motion.img
+          src={`${bucketUrl}/icons/bunny.webp`}
+          alt="Bunny"
+          style={{
+            width: imageWidth, // Responsive width
+            height: 'auto',
+            cursor: 'pointer',
+          }}
+          animate={{
+            y: [-10, 0], // Bounce effect
+          }}
+          transition={{
+            duration: 0.5,
+            ease: 'easeInOut',
+            repeat: Infinity,
+            repeatType: 'reverse', // Repeat back and forth
+          }}
+          onLoad={() => setImageLoaded(true)} // Mark image as loaded
+        />
       </Link>
     </motion.div>
   );

@@ -15,7 +15,7 @@ const Angel = () => {
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const isMediumScreen = useMediaQuery(theme.breakpoints.between('sm', 'md'));
 
-  const imageWidth = isSmallScreen ? 100 : isMediumScreen ? 250 : 450;
+  const imageWidth = isSmallScreen ? '40vw' : isMediumScreen ? '25vw' : '20vw';
   const fontSize = isSmallScreen ? '1rem' : isMediumScreen ? '1.25rem' : '1.5rem';
 
   return (
@@ -52,7 +52,7 @@ const Angel = () => {
           src={`${bucketUrl}/icons/angel.webp`}
           alt="angel"
           style={{
-            width: `${imageWidth}px`,
+            width: imageWidth,
             height: 'auto',
             cursor: 'pointer',
           }}

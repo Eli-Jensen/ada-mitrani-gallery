@@ -15,7 +15,7 @@ const BookCover = () => {
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const isMediumScreen = useMediaQuery(theme.breakpoints.between('sm', 'md'));
 
-  const imageWidth = isSmallScreen ? 100 : isMediumScreen ? 150 : 250;
+  const imageWidth = isSmallScreen ? '20vw' : isMediumScreen ? '15vw' : '10vw';
   const fontSize = isSmallScreen ? '1rem' : isMediumScreen ? '1.25rem' : '1.5rem';
 
   return (
@@ -40,7 +40,7 @@ const BookCover = () => {
               textDecoration: 'underline',
             }}
           >
-            Book Covers
+            Book<br />Covers
           </motion.div>
         </motion.div>
       </Link>
@@ -51,7 +51,7 @@ const BookCover = () => {
           src={`${bucketUrl}/icons/Cover_EN.webp`}
           alt="Book Cover"
           style={{
-            width: `${imageWidth}px`,
+            width: imageWidth,
             height: 'auto',
             cursor: 'pointer',
           }}

@@ -7,44 +7,46 @@ import PregnantMother from '../components/PregnantMother';
 import Dog from '../components/Dog';
 import Angel from '../components/Angel';
 import BookCover from '../components/BookCover';
+import CatLeftPage from '../components/CatLeftPage';
 
 export default function Categories() {
   return (
-    <main style={{ position: 'relative', minHeight: '100vh', overflow: 'hidden' }}>
+    <main
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between', // Distribute space between icons and RunningMan
+        minHeight: '100vh',
+        overflow: 'hidden',
+      }}
+    >
+      {/* Top section with clickable icons */}
       <div
         style={{
           display: 'flex',
-          flexDirection: 'column',
+          flexWrap: 'wrap',
+          justifyContent: 'space-evenly',
           alignItems: 'center',
-          justifyContent: 'center',
-          width: '100%',
-          height: '60vh', // Allocate 60% of viewport height for clickable icons
-          gap: '20px', // Space between rows/icons
+          padding: '20px', // Add padding to prevent clipping at edges
+          gap: '30px', // Increase gap between items to avoid overlap
+          flex: '1 1 auto', // Allow this section to take up flexible space
         }}
       >
-        {/* Row of clickable icons */}
-        <div
-          style={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            justifyContent: 'space-evenly',
-            width: '100%',
-          }}
-        >
-          <Dog />
-          <Angel />
-          <PregnantMother />
-          <BookCover />
-          <Bunny />
-        </div>
+        <Dog />
+        <CatLeftPage />
+        <Angel />
+        <PregnantMother />
+        <BookCover />
+        <Bunny />
       </div>
 
-      {/* RunningMan spans the remaining 40% of the viewport */}
+      {/* RunningMan section */}
       <div
         style={{
-          width: '100%', 
-          position: 'relative', 
-          height: '40vh', // Allocate 40% of viewport height for RunningMan and rocks
+          width: '100%',
+          height: '40vh', // Fixed height for RunningMan
+          position: 'relative',
+          zIndex: 1
         }}
       >
         <RunningMan />

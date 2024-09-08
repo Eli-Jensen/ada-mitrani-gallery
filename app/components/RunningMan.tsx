@@ -10,7 +10,9 @@ const RunningMan = () => {
   const [position, setPosition] = useState(100);
   const [runningManWidth, setRunningManWidth] = useState(400);
   const [runningManHeight, setRunningManHeight] = useState<number | null>(null);
-  const [isLoaded, setIsLoaded] = useState(false); // Track when the image is loaded
+  const [isTouchDevice, setIsTouchDevice] = useState(false); // Detect if touch device
+  const [isMovingRight, setIsMovingRight] = useState(true); // Track movement direction
+  const [isLoaded, setIsLoaded] = useState(false);
   const mousePositionRef = useRef(100);
   const runningManRef = useRef<HTMLImageElement | null>(null);
   const groundWidth = useRef(0);
@@ -33,6 +35,14 @@ const RunningMan = () => {
     lineHeight: isSmallScreen ? '1.2rem' : 'normal',
   };
 
+  // Check if the user is on a touch device
+  useLayoutEffect(() => {
+    const checkTouchDevice = () => {
+      setIsTouchDevice('ontouchstart' in window || navigator.maxTouchPoints > 0);
+    };
+    checkTouchDevice();
+  }, []);
+
   // Update dimensions on window resize
   useLayoutEffect(() => {
     const updateDimensions = () => {
@@ -51,45 +61,68 @@ const RunningMan = () => {
     return () => window.removeEventListener('resize', updateDimensions);
   }, []);
 
-  // Handle mouse movement and update RunningMan's position
+  // Handle mouse movement on non-touch devices
   useLayoutEffect(() => {
-    const handleMouseMove = (event: MouseEvent) => {
-      const newMouseX = Math.max(
-        groundStart.current,
-        Math.min(event.clientX - runningManWidth / 2, groundStart.current + groundWidth.current - runningManWidth)
-      );
-      mousePositionRef.current = newMouseX;
-    };
+    if (!isTouchDevice) {
+      const handleMouseMove = (event: MouseEvent) => {
+        const newMouseX = Math.max(
+          groundStart.current,
+          Math.min(event.clientX - runningManWidth / 2, groundStart.current + groundWidth.current - runningManWidth)
+        );
+        mousePositionRef.current = newMouseX;
+      };
 
-    window.addEventListener('mousemove', handleMouseMove);
+      window.addEventListener('mousemove', handleMouseMove);
 
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, [runningManWidth]);
+      return () => window.removeEventListener('mousemove', handleMouseMove);
+    }
+  }, [runningManWidth, isTouchDevice]);
 
-  // Animate the position of RunningMan based on mouse movement
+  // Animate RunningMan's movement
   useLayoutEffect(() => {
     let animationFrameId: number;
 
     const updatePosition = () => {
-      const delta = mousePositionRef.current - position;
-      const speed = 0.05; // Controls how fast RunningMan follows the mouse
-      if (Math.abs(delta) > 1) {
-        setPosition((prevPosition) => prevPosition + delta * speed);
+      if (isTouchDevice) {
+        // Automatic back-and-forth running for touch devices
+        const speed = 0.5;
+        setPosition((prevPosition) => {
+          const newPosition = prevPosition + (isMovingRight ? speed : -speed);
+
+          // If RunningMan reaches the right edge, reverse direction
+          if (newPosition > groundWidth.current - runningManWidth) {
+            setIsMovingRight(false);
+          }
+          // If RunningMan reaches the left edge, reverse direction
+          if (newPosition < 0) {
+            setIsMovingRight(true);
+          }
+
+          return newPosition;
+        });
+      } else {
+        // Follow mouse pointer for non-touch devices
+        const delta = mousePositionRef.current - position;
+        const speed = 0.02;
+        if (Math.abs(delta) > 1) {
+          setPosition((prevPosition) => prevPosition + delta * speed);
+        }
       }
+
       animationFrameId = requestAnimationFrame(updatePosition);
     };
 
     animationFrameId = requestAnimationFrame(updatePosition);
 
     return () => cancelAnimationFrame(animationFrameId);
-  }, [position]);
+  }, [position, isTouchDevice, isMovingRight]);
 
   // Update height when image is loaded
   useLayoutEffect(() => {
     if (runningManRef.current) {
       const updateHeight = () => {
         setRunningManHeight(runningManRef.current!.clientHeight);
-        setIsLoaded(true); // Mark image as loaded
+        setIsLoaded(true);
       };
       if (runningManRef.current.complete) {
         updateHeight();
@@ -99,7 +132,11 @@ const RunningMan = () => {
     }
   }, [runningManRef.current]);
 
-  const flipDirection = `scaleX(${mousePositionRef.current < position ? '1' : '-1'})`;
+  const flipDirection = isTouchDevice
+    ? isMovingRight
+      ? 'scaleX(-1)' // Move right: normal direction
+      : 'scaleX(1)' // Move left: flipped horizontally
+    : `scaleX(${mousePositionRef.current < position ? '1' : '-1'})`;
 
   return (
     <div style={{ width: '100%', height: '100%', position: 'relative', overflow: 'hidden', zIndex: 5 }}>
@@ -131,11 +168,11 @@ const RunningMan = () => {
           style={{
             position: 'absolute',
             bottom: `${groundHeight}px`, // Above the ground
-            left: `${position}px`, // Dynamic position based on mouse movement
+            left: `${position}px`, // Dynamic position
             width: `${runningManWidth}px`,
             height: 'auto',
             cursor: 'pointer',
-            transform: flipDirection,
+            transform: flipDirection, // Flip horizontally based on direction
             transition: 'transform 0.2s ease-in-out',
           }}
         />

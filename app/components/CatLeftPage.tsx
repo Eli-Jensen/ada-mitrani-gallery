@@ -6,7 +6,7 @@ import Link from 'next/link';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 
-const Dog = () => {
+const CatLeftPage = () => {
   const bucketUrl = process.env.NEXT_PUBLIC_R2_BUCKET_URL;
 
   const [imageLoaded, setImageLoaded] = useState(false);
@@ -15,8 +15,9 @@ const Dog = () => {
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const isMediumScreen = useMediaQuery(theme.breakpoints.between('sm', 'md'));
 
-  const imageWidth = isSmallScreen ? '30vw' : isMediumScreen ? '20vw' : '15vw';
-  const fontSize = isSmallScreen ? '1rem' : isMediumScreen ? '1.25rem' : '1.5rem';
+  // Use relative units (vw) for the image width to make it responsive
+  const imageWidth = isSmallScreen ? '20vw' : isMediumScreen ? '15vw' : '10vw';
+  const fontSize = isSmallScreen ? '1em' : isMediumScreen ? '1.25em' : '1.5em'; // Use em for font size
 
   return (
     <motion.div
@@ -25,7 +26,7 @@ const Dog = () => {
         width: 'fit-content',
       }}
     >
-      <Link href="/drawings">
+      <Link href="/poetry-illustrations">
         <motion.div
           style={{
             cursor: 'pointer',
@@ -35,39 +36,35 @@ const Dog = () => {
         >
           <motion.div
             style={{
-              fontSize: fontSize,
+              fontSize: fontSize, // Responsive font size using em
               color: 'black',
               textDecoration: 'underline',
             }}
-            whileHover={{ scale: 1.05 }}
           >
-            Drawings
+            Poetry<br />Illustrations
           </motion.div>
         </motion.div>
       </Link>
 
-      {/* Dog Image with Clockwise Bark Rotation from Hind Legs */}
-      <Link href="/drawings">
+      {/* Cat Left Page Image with Responsive Width */}
+      <Link href="/poetry-illustrations">
         <motion.img
-          src={`${bucketUrl}/icons/dog_II.webp`}
-          alt="dog_II"
+          src={`${bucketUrl}/icons/cat_left_page.webp`}
+          alt="Cat Page from Poetry Illustrations"
           style={{
-            width: imageWidth,
+            width: imageWidth, // Use vw for responsive width
             height: 'auto',
             cursor: 'pointer',
-            transformOrigin: 'bottom right', // Rotate around hind legs (bottom-right corner)
           }}
           animate={{
-            rotate: [0, 10, 0, 10, 0], // Clockwise rotation
-            x: [0, -25, 0, -25, 0], // Aggressive forward motion
-            y: [0, -15, 0, -15, 0], // Up and down movement
+            rotate: [0, 1.5, 0, -1.5, 0], // Gentle tilting
+            scale: [1, 1.05, 1], // Slight pulse to mimic curiosity
           }}
           transition={{
-            duration: 1.2,
+            duration: 4,
             ease: 'easeInOut',
-            times: [0, 0.2, 0.4, 0.6, 1],
             repeat: Infinity,
-            repeatDelay: 2, // Pause between bark cycles
+            repeatType: 'mirror', // Smooth back-and-forth motion
           }}
           onLoad={() => setImageLoaded(true)}
         />
@@ -76,4 +73,4 @@ const Dog = () => {
   );
 };
 
-export default Dog;
+export default CatLeftPage;
