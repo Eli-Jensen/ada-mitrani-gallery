@@ -1,6 +1,6 @@
 ## Overview
 
-Art gallery for artist Ada Mitrani
+Art gallery for artist Ada Mitrani.
 
 ## Tech Used
 - [Next.js 14](https://nextjs.org/docs)
