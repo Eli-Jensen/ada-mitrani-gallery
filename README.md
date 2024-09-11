@@ -3,7 +3,7 @@
 Art gallery for artist Ada Mitrani.
 
 ## Demo
-![Demo of website](https://adamitrani.com/ada_site_demo.gif)
+![Demo of website](https://github.com/Eli-Jensen/ada-mitrani-gallery/blob/main/public/ada_site_demo.gif)
 
 ## Tech Used
 - [Next.js 14](https://nextjs.org/docs)
