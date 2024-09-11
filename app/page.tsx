@@ -16,7 +16,9 @@ export default function HomePage() {
                 src={`${bucketUrl}/icons/self-portrait.webp`}
                 alt="Self Portrait"
                 fill
+                sizes="(max-width: 768px) 50vw, (max-width: 480px) 70vw, 30vw"
                 style={{ cursor: 'pointer', objectFit: 'contain' }}
+                priority
               />
             </div>
             <div className="name-container">
