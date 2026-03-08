@@ -3,7 +3,7 @@ import GalleryClient from '../components/GalleryClient';
 
 export default async function BookCoversPage() {
   const folderName = 'book-covers/';
-  const imageKeys = await fetchImagesFromR2(folderName);
+  const images = await fetchImagesFromR2(folderName);
 
-  return <GalleryClient initialImageKeys={imageKeys} title="Book Covers"/>;
+  return <GalleryClient images={images} title="Book Covers"/>;
 }

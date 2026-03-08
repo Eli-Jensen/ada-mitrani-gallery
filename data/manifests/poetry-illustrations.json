@@ -1,0 +1,54 @@
+{
+  "images": [
+    {
+      "key": "poetry-illustrations/img1.webp",
+      "width": 7874,
+      "height": 5512
+    },
+    {
+      "key": "poetry-illustrations/img10.webp",
+      "width": 3307,
+      "height": 4730
+    },
+    {
+      "key": "poetry-illustrations/img2.webp",
+      "width": 4677,
+      "height": 6550
+    },
+    {
+      "key": "poetry-illustrations/img3.webp",
+      "width": 7574,
+      "height": 5512
+    },
+    {
+      "key": "poetry-illustrations/img4.webp",
+      "width": 4137,
+      "height": 3307
+    },
+    {
+      "key": "poetry-illustrations/img5.webp",
+      "width": 4724,
+      "height": 3246
+    },
+    {
+      "key": "poetry-illustrations/img6.webp",
+      "width": 4724,
+      "height": 6036
+    },
+    {
+      "key": "poetry-illustrations/img7.webp",
+      "width": 5419,
+      "height": 7874
+    },
+    {
+      "key": "poetry-illustrations/img8.webp",
+      "width": 3307,
+      "height": 3964
+    },
+    {
+      "key": "poetry-illustrations/img9.webp",
+      "width": 7436,
+      "height": 5512
+    }
+  ]
+}
