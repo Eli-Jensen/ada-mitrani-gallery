@@ -12,24 +12,26 @@ import ImageListItem from '@mui/material/ImageListItem';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
+import type { ImageEntry } from '../actions/fetchImages';
 
 interface GalleryClientProps {
-  initialImageKeys: string[];
+  images: ImageEntry[];
   title: string;
 }
 
-export default function GalleryClient({ initialImageKeys, title }: GalleryClientProps) {
-  const [imageKeys, setImageKeys] = useState<string[]>(initialImageKeys);
-  const [imageDimensions, setImageDimensions] = useState<{ [key: string]: { width: number; height: number } }>({});
-  const [loading, setLoading] = useState(true);
-
+export default function GalleryClient({ images, title }: GalleryClientProps) {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const isMediumScreen = useMediaQuery(theme.breakpoints.between('sm', 'lg'));
-  const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
 
-  // Adjusting the font size based on screen size
   const fontSize = isSmallScreen ? '1.5rem' : isMediumScreen ? '2rem' : '2.5rem';
+
+  // Check if dimensions are pre-computed (manifest was available)
+  const hasDimensions = images.length > 0 && images[0].width > 0;
+
+  // Fallback: fetch dimensions client-side if manifest was missing
+  const [fallbackDimensions, setFallbackDimensions] = useState<{ [key: string]: { width: number; height: number } }>({});
+  const [fallbackLoading, setFallbackLoading] = useState(!hasDimensions);
 
   const initializePhotoSwipe = useCallback(() => {
     const lightbox = new PhotoSwipeLightbox({
@@ -45,33 +47,59 @@ export default function GalleryClient({ initialImageKeys, title }: GalleryClient
     };
   }, []);
 
+  // Fallback: parallel dimension fetching when manifest is missing
   useEffect(() => {
-    const fetchImageDimensions = async () => {
-      const dimensions: { [key: string]: { width: number; height: number } } = {};
-      for (const key of imageKeys) {
-        const src = `${process.env.NEXT_PUBLIC_R2_BUCKET_URL}/${key}`;
-        const { width, height } = await getImageDimensions(src);
-        dimensions[key] = { width, height };
+    if (hasDimensions) return;
+
+    const fetchAllDimensions = async () => {
+      const BATCH_SIZE = 6;
+      const dims: { [key: string]: { width: number; height: number } } = {};
+
+      for (let i = 0; i < images.length; i += BATCH_SIZE) {
+        const batch = images.slice(i, i + BATCH_SIZE);
+        const results = await Promise.all(
+          batch.map(async (image) => {
+            const src = `${process.env.NEXT_PUBLIC_R2_BUCKET_URL}/${image.key}`;
+            const d = await getImageDimensions(src);
+            return { key: image.key, ...d };
+          })
+        );
+        results.forEach((r) => {
+          dims[r.key] = { width: r.width, height: r.height };
+        });
+        // Update state after each batch so images render progressively
+        setFallbackDimensions({ ...dims });
       }
-      setImageDimensions(dimensions);
-      setLoading(false);
+      setFallbackLoading(false);
     };
 
-    fetchImageDimensions();
-  }, [imageKeys]);
+    fetchAllDimensions();
+  }, [images, hasDimensions]);
 
+  // Initialize PhotoSwipe when images are ready
   useEffect(() => {
-    if (Object.keys(imageDimensions).length === imageKeys.length) {
-      initializePhotoSwipe();
+    const ready = hasDimensions || Object.keys(fallbackDimensions).length === images.length;
+    if (ready && images.length > 0) {
+      return initializePhotoSwipe();
     }
-  }, [imageDimensions, imageKeys, initializePhotoSwipe]);
+  }, [hasDimensions, fallbackDimensions, images, initializePhotoSwipe]);
 
-  let cols = 5; // Default for large screens
+  let cols = 5;
   if (isMediumScreen) {
-    cols = 3; // Medium screens
+    cols = 3;
   } else if (isSmallScreen) {
-    cols = 3; // Small screens
+    cols = 3;
   }
+
+  // Build the list of renderable images with dimensions
+  const renderableImages = hasDimensions
+    ? images
+    : images.filter((img) => fallbackDimensions[img.key]);
+
+  const getDimensions = (image: ImageEntry) => {
+    if (hasDimensions) return { width: image.width, height: image.height };
+    return fallbackDimensions[image.key] || { width: 0, height: 0 };
+  };
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
@@ -82,40 +110,42 @@ export default function GalleryClient({ initialImageKeys, title }: GalleryClient
         <Typography variant="h1" style={{ textAlign: 'center', flex: '1', fontSize: fontSize, margin: '0' }}>
           {title}
         </Typography>
-        <div style={{ width: '7.5rem' }}></div> {/* Spacer for centering the title */}
+        <div style={{ width: '7.5rem' }}></div>
       </div>
-      {loading ? (
+      {fallbackLoading && renderableImages.length === 0 ? (
         <div style={{ flex: '1', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          <div className="spinner"></div> {/* Loading spinner */}
+          <div className="spinner"></div>
         </div>
       ) : (
-        <ImageList variant="masonry"
+        <ImageList
+          variant="masonry"
           id="gallery"
-          cols={cols} // Dynamic columns based on screen size
-          gap={10} // Use a direct number for the gap property
-          style={{ flex: '1', padding: theme.spacing(6) }} // Reduced padding around the gallery
+          cols={cols}
+          gap={10}
+          style={{ flex: '1', padding: theme.spacing(6) }}
         >
-          {imageKeys.map((key, index) => {
-            const dimensions = imageDimensions[key];
-            if (!dimensions) return null; // Skip rendering until dimensions are loaded
+          {renderableImages.map((image, index) => {
+            const dimensions = getDimensions(image);
+            if (!dimensions.width) return null;
 
             return (
-              <ImageListItem key={key} cols={1}>
+              <ImageListItem key={image.key} cols={1}>
                 <a
-                  href={`${process.env.NEXT_PUBLIC_R2_BUCKET_URL}/${key}`}
+                  href={`${process.env.NEXT_PUBLIC_R2_BUCKET_URL}/${image.key}`}
                   data-pswp-width={dimensions.width}
                   data-pswp-height={dimensions.height}
                 >
                   <Image
-                    src={`${process.env.NEXT_PUBLIC_R2_BUCKET_URL}/${key}`}
-                    alt={key}
+                    src={`${process.env.NEXT_PUBLIC_R2_BUCKET_URL}/${image.key}`}
+                    alt={image.key}
                     width={dimensions.width}
                     height={dimensions.height}
-                    loading={index === 0 ? 'eager' : 'lazy'} // Lazy load all images except the first one
+                    sizes="(max-width: 600px) 33vw, (max-width: 1200px) 33vw, 20vw"
+                    loading={index === 0 ? 'eager' : 'lazy'}
                     style={{
-                      width: '100%', // Make the image responsive
-                      height: 'auto', // Maintain aspect ratio
-                      borderRadius: theme.shape.borderRadius, // Optional: Add rounded corners
+                      width: '100%',
+                      height: 'auto',
+                      borderRadius: theme.shape.borderRadius,
                     }}
                   />
                 </a>

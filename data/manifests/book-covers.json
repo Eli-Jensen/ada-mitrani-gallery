@@ -1,0 +1,14 @@
+{
+  "images": [
+    {
+      "key": "book-covers/Cover BG.webp",
+      "width": 1726,
+      "height": 1058
+    },
+    {
+      "key": "book-covers/Cover EN.webp",
+      "width": 2144,
+      "height": 1354
+    }
+  ]
+}

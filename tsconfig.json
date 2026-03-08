@@ -22,5 +22,5 @@
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/cats/page.tsx"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "scripts"]
 }

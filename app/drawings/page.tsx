@@ -3,7 +3,7 @@ import GalleryClient from '../components/GalleryClient';
 
 export default async function DrawingsPage() {
   const folderName = 'drawings/';
-  const imageKeys = await fetchImagesFromR2(folderName);
+  const images = await fetchImagesFromR2(folderName);
 
-  return <GalleryClient initialImageKeys={imageKeys} title="Drawings"/>;
+  return <GalleryClient images={images} title="Drawings"/>;
 }

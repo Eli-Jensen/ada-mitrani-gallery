@@ -3,7 +3,7 @@ import GalleryClient from '../components/GalleryClient';
 
 export default async function ChildrenBookIllustrationsPage() {
   const folderName = 'children-book-illustrations/';
-  const imageKeys = await fetchImagesFromR2(folderName);
+  const images = await fetchImagesFromR2(folderName);
 
-  return <GalleryClient initialImageKeys={imageKeys} title="Children Book Illustrations" />;
+  return <GalleryClient images={images} title="Children Book Illustrations" />;
 }
