@@ -40,7 +40,6 @@ const PregnantMother = () => {
             style={{
               fontSize: fontSize,
               color: 'black',
-              textDecoration: 'underline',
             }}
             whileHover={{ scale: 1.05 }} // Small hover effect for the text
           >

@@ -15,7 +15,7 @@ export default function BioContact() {
           justifyContent: 'center',
           alignItems: 'center',
           width: '100%',
-          padding: '20px',
+          padding: { xs: '12px', sm: '20px' },
           position: 'relative',
         }}
       >
@@ -34,7 +34,7 @@ export default function BioContact() {
       {/* Main Content Section with Bio Placeholder and Contact Form */}
       <Box
         sx={{
-          padding: '20px',
+          padding: { xs: '12px', sm: '20px' },
           textAlign: 'left',
           width: '100%',
           maxWidth: { xs: '80vw', sm: '70vw', md: '60vw' },

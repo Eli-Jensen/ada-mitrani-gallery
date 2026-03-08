@@ -17,10 +17,10 @@ const RunningMan = () => {
   const runningManRef = useRef<HTMLImageElement | null>(null);
   const groundWidth = useRef(0);
   const groundStart = useRef(0);
-  const groundHeight = 50;
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const isMediumScreen = useMediaQuery(theme.breakpoints.between('sm', 'md'));
+  const groundHeight = isSmallScreen ? 30 : 50;
 
   const bucketUrl = process.env.NEXT_PUBLIC_R2_BUCKET_URL;
 
@@ -29,7 +29,6 @@ const RunningMan = () => {
     fontSize: fontSize,
     color: 'black',
     textAlign: 'center' as MotionStyle['textAlign'],
-    textDecoration: 'underline',
     cursor: 'pointer',
     whiteSpace: isSmallScreen ? 'normal' : 'nowrap',
     width: isSmallScreen ? '100px' : 'auto',
@@ -129,7 +128,7 @@ const RunningMan = () => {
     : `scaleX(${mousePositionRef.current < position ? '1' : '-1'})`;
 
   return (
-    <div style={{ width: '100%', height: '100%', position: 'relative', overflow: 'hidden', zIndex: 5 }}>
+    <div style={{ width: '100%', height: '100%', position: 'relative', zIndex: 5 }}>
       <Link href="/children-book-illustrations">
         {isLoaded && runningManHeight !== null && (
           <motion.div

@@ -37,7 +37,6 @@ const Angel = () => {
             style={{
               fontSize: fontSize,
               color: 'black',
-              textDecoration: 'underline',
             }}
             whileHover={{ scale: 1.05 }}
           >
