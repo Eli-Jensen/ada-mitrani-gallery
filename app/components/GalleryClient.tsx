@@ -88,7 +88,7 @@ export default function GalleryClient({ images, title }: GalleryClientProps) {
   if (isMediumScreen) {
     cols = 3;
   } else if (isSmallScreen) {
-    cols = 3;
+    cols = 2;
   }
 
   // Build the list of renderable images with dimensions
@@ -103,14 +103,14 @@ export default function GalleryClient({ images, title }: GalleryClientProps) {
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem 2rem' }}>
-        <Link href="/categories">
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: isSmallScreen ? '0.5rem 0.75rem' : '1rem 2rem', gap: '0.5rem' }}>
+        <Link href="/categories" style={{ flexShrink: 0 }}>
           <BackToCategoriesButton />
         </Link>
-        <Typography variant="h1" style={{ textAlign: 'center', flex: '1', fontSize: fontSize, margin: '0' }}>
+        <Typography variant="h1" style={{ textAlign: 'center', flex: '1', fontSize: fontSize, margin: '0', minWidth: 0 }}>
           {title}
         </Typography>
-        <div style={{ width: '7.5rem' }}></div>
+        {!isSmallScreen && !isMediumScreen && <div style={{ width: '7.5rem', flexShrink: 0 }}></div>}
       </div>
       {fallbackLoading && renderableImages.length === 0 ? (
         <div style={{ flex: '1', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -122,7 +122,7 @@ export default function GalleryClient({ images, title }: GalleryClientProps) {
           id="gallery"
           cols={cols}
           gap={10}
-          style={{ flex: '1', padding: theme.spacing(6) }}
+          style={{ flex: '1', padding: isSmallScreen ? theme.spacing(2) : isMediumScreen ? theme.spacing(4) : theme.spacing(6) }}
         >
           {renderableImages.map((image, index) => {
             const dimensions = getDimensions(image);
@@ -140,7 +140,7 @@ export default function GalleryClient({ images, title }: GalleryClientProps) {
                     alt={image.key}
                     width={dimensions.width}
                     height={dimensions.height}
-                    sizes="(max-width: 600px) 33vw, (max-width: 1200px) 33vw, 20vw"
+                    sizes="(max-width: 600px) 50vw, (max-width: 1200px) 33vw, 20vw"
                     loading={index === 0 ? 'eager' : 'lazy'}
                     style={{
                       width: '100%',

@@ -36,9 +36,8 @@ const Bunny = () => {
         >
           <motion.div
             style={{
-              fontSize: fontSize, // Responsive font size
+              fontSize: fontSize,
               color: 'black',
-              textDecoration: 'underline',
             }}
             whileHover={{ scale: 1.05 }}
           >

@@ -14,7 +14,7 @@ export default function BackToCategoriesButton() {
         border: '2px solid #000',
         borderRadius: '20px / 50%', // Oval shape
         backgroundColor: 'transparent',
-        fontSize: isSmallScreen ? '0.75rem' : '1rem', // Smaller font size on small screens
+        fontSize: isSmallScreen ? '0.75rem' : '1rem',
         color: '#000', // Set the text color to black
         textTransform: 'none', // Keep the text in its original case
         '&:hover': {

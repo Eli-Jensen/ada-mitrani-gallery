@@ -7,7 +7,7 @@ export default function HomePage() {
   const bucketUrl = process.env.NEXT_PUBLIC_R2_BUCKET_URL;
 
   return (
-    <div style={{ backgroundColor: 'black', height: '100vh' }}>
+    <div style={{ backgroundColor: 'black', minHeight: '100dvh' }}>
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', padding: '20px', flexDirection: 'column' }}>
         <Link href="/categories">
           <div className="portrait-container">
@@ -16,7 +16,7 @@ export default function HomePage() {
                 src={`${bucketUrl}/icons/self-portrait.webp`}
                 alt="Self Portrait"
                 fill
-                sizes="(max-width: 768px) 50vw, (max-width: 480px) 70vw, 30vw"
+                sizes="(max-width: 480px) 70vw, (max-width: 768px) 50vw, 30vw"
                 style={{ cursor: 'pointer', objectFit: 'contain' }}
                 priority
               />
